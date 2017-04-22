@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 
 import com.normanhoeller.beachesarefun.beaches.network.MyAsyncTask;
 
+import java.util.List;
+
 /**
  * Created by norman on 22/04/17.
  */
@@ -28,5 +30,12 @@ public class NetworkFragment extends Fragment {
 
     public void loadPageOfPictures(int page) {
         new MyAsyncTask(this).execute(String.valueOf(page));
+    }
+
+    public void setResult(List<BeachModel> beaches) {
+        BeachListFragment beachListFragment = (BeachListFragment) getFragmentManager().findFragmentById(android.R.id.content);
+        if (beachListFragment != null) {
+            beachListFragment.setBeaches(beaches);
+        }
     }
 }

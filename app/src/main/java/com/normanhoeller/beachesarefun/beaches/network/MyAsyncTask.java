@@ -2,9 +2,13 @@ package com.normanhoeller.beachesarefun.beaches.network;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
+import com.normanhoeller.beachesarefun.beaches.BeachModel;
 import com.normanhoeller.beachesarefun.beaches.NetworkFragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -13,12 +17,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by norman on 22/04/17.
  */
 
-public class MyAsyncTask extends AsyncTask<String, Void, String> {
+public class MyAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
 
     private final static String TAG = MyAsyncTask.class.getSimpleName();
     private final static String BASE_URL = "139.59.158.8:3000";
@@ -29,14 +35,15 @@ public class MyAsyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected List<BeachModel> doInBackground(String... strings) {
         String page = strings[0];
-        return loadPageOfPictures(page);
+        String json = loadPageOfPictures(page);
+        return parseJson(json);
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        Log.d(TAG, s);
+    protected void onPostExecute(List<BeachModel> beaches) {
+        fragment.setResult(beaches);
     }
 
     public String loadPageOfPictures(String page) {
@@ -72,5 +79,25 @@ public class MyAsyncTask extends AsyncTask<String, Void, String> {
         String result = out.toString();
         reader.close();
         return result;
+    }
+
+    private List<BeachModel> parseJson(String json) {
+        List<BeachModel> beaches = new ArrayList<>();
+        try {
+            JSONArray jArray = new JSONArray(json);
+            for (int i = 0; i < jArray.length(); i++) {
+                JSONObject beach = jArray.getJSONObject(i);
+                String id = beach.getString("_id");
+                String name = beach.getString("name");
+                String url = beach.getString("url");
+                String width = beach.getString("width");
+                String height = beach.getString("height");
+                beaches.add(new BeachModel(id, name, url, width, height));
+            }
+            return beaches;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return beaches;
+        }
     }
 }
