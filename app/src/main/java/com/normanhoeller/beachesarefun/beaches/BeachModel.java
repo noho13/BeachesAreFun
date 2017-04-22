@@ -2,13 +2,19 @@ package com.normanhoeller.beachesarefun.beaches;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Color;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.normanhoeller.beachesarefun.beaches.network.DrawableWrapper;
+import com.normanhoeller.beachesarefun.beaches.network.ImageAsyncTask;
+
+import java.lang.ref.WeakReference;
 import java.util.Random;
+
+import static com.normanhoeller.beachesarefun.beaches.network.ListAsyncTask.BASE_URL;
 
 /**
  * Created by norman on 22/04/17.
@@ -30,6 +36,50 @@ public class BeachModel {
         this.height = height;
     }
 
+    @BindingAdapter("android:layout_width")
+    public static void setLayoutWidth(View view, int width) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.width = width;
+        view.setLayoutParams(layoutParams);
+    }
+
+    @BindingAdapter("android:layout_height")
+    public static void setLayoutHeight(View view, int height) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = height;
+        view.setLayoutParams(layoutParams);
+    }
+
+    @BindingAdapter("app:imageUrl")
+    public static void setImageBitmap(ImageView imageView, String imageUrl) {
+        if (noOnGoingDownloadWork(imageView, imageUrl)) {
+            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl);
+            DrawableWrapper drawableWrapper = new DrawableWrapper(new WeakReference<>(imageAsyncTask));
+            imageView.setImageDrawable(drawableWrapper);
+            imageAsyncTask.execute(imageUrl);
+        }
+    }
+
+    private static boolean noOnGoingDownloadWork(ImageView imageView, String imageUrl) {
+        ImageAsyncTask ongoingTask = getTaskForImageView(imageView);
+        if (ongoingTask != null) {
+            if (ongoingTask.getUrl() == null || !ongoingTask.getUrl().equalsIgnoreCase(imageUrl)) {
+                ongoingTask.cancel(true);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static ImageAsyncTask getTaskForImageView(ImageView imageView) {
+        Drawable drawable = imageView.getDrawable();
+        if (drawable != null && drawable instanceof DrawableWrapper) {
+            return ((DrawableWrapper) drawable).getBitmapDownloaderTaskReference();
+        }
+        return null;
+    }
+
     public String getId() {
         return _id;
     }
@@ -38,8 +88,13 @@ public class BeachModel {
         return name;
     }
 
-    public String getUrl() {
-        return url;
+    public String imageUrl() {
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder
+                .scheme("http")
+                .encodedAuthority(BASE_URL)
+                .appendEncodedPath(url);
+        return uriBuilder.build().toString();
     }
 
     public int getWidthInDP() {
@@ -63,21 +118,8 @@ public class BeachModel {
         int r = random.nextInt(255);
         int g = random.nextInt(255);
         int b = random.nextInt(255);
-        return Color.rgb(r,g,b);
+        return Color.rgb(r, g, b);
     }
 
-    @BindingAdapter("android:layout_width")
-    public static void setLayoutWidth(View view, int width) {
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.width = width;
-        view.setLayoutParams(layoutParams);
-    }
-
-    @BindingAdapter("android:layout_height")
-    public static void setLayoutHeight(View view, int height) {
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = height;
-        view.setLayoutParams(layoutParams);
-    }
 
 }

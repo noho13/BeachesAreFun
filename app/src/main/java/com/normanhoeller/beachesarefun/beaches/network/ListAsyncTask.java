@@ -24,13 +24,13 @@ import java.util.List;
  * Created by norman on 22/04/17.
  */
 
-public class MyAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
+public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
 
-    private final static String TAG = MyAsyncTask.class.getSimpleName();
-    private final static String BASE_URL = "139.59.158.8:3000";
+    private final static String TAG = ListAsyncTask.class.getSimpleName();
+    public final static String BASE_URL = "139.59.158.8:3000";
     private NetworkFragment fragment;
 
-    public MyAsyncTask(NetworkFragment fragment) {
+    public ListAsyncTask(NetworkFragment fragment) {
         this.fragment = fragment;
     }
 

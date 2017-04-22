@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.normanhoeller.beachesarefun.beaches.network.MyAsyncTask;
+import com.normanhoeller.beachesarefun.beaches.network.ListAsyncTask;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class NetworkFragment extends Fragment {
     }
 
     public void loadPageOfPictures(int page) {
-        new MyAsyncTask(this).execute(String.valueOf(page));
+        new ListAsyncTask(this).execute(String.valueOf(page));
     }
 
     public void setResult(List<BeachModel> beaches) {

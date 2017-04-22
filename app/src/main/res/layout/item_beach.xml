@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -17,7 +18,7 @@
         <ImageView
             android:layout_width="@{beach.widthInDP, default=match_parent}"
             android:layout_height="@{beach.heightInDP, default=wrap_content}"
-            android:background="@{beach.randomBackgroundColor}"
+            app:imageUrl="@{beach.imageUrl}"
             />
 
         <TextView
