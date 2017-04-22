@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
-import com.normanhoeller.beachesarefun.beaches.NetworkFragment;
+import com.normanhoeller.beachesarefun.NetworkFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -21,7 +21,11 @@ public class BeachAdapter extends RecyclerView.Adapter<BeachAdapter.ViewHolder> 
     private List<BeachModel> beachModelList;
 
     public void setBeachModelList(List<BeachModel> beaches) {
-        beachModelList = beaches;
+        if (beachModelList != null) {
+            beachModelList.addAll(beaches);
+        } else {
+            beachModelList = beaches;
+        }
         notifyDataSetChanged();
     }
 

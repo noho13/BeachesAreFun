@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BeachesAreFun</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
 </resources>

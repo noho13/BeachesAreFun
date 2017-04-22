@@ -1,10 +1,13 @@
-package com.normanhoeller.beachesarefun.beaches;
+package com.normanhoeller.beachesarefun;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.normanhoeller.beachesarefun.beaches.BeachListFragment;
+import com.normanhoeller.beachesarefun.beaches.BeachModel;
 import com.normanhoeller.beachesarefun.beaches.network.ListAsyncTask;
+import com.normanhoeller.beachesarefun.login.LoginAsyncTask;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ public class NetworkFragment extends Fragment {
 
     public static final String FRAG_TAG = "network_fragment";
     private final static String TAG = NetworkFragment.class.getSimpleName();
+    public static final int PAGE_SIZE = 6;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,5 +41,17 @@ public class NetworkFragment extends Fragment {
         if (beachListFragment != null) {
             beachListFragment.setBeaches(beaches);
         }
+    }
+
+    public void postPayload(String url, String payload) {
+        new LoginAsyncTask().execute(url, payload);
+    }
+
+    public void loginUser(String userName, String password) {
+
+    }
+
+    public void logoutCurrentUser() {
+
     }
 }
