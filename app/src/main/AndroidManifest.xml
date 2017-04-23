@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".beaches.BeachesActivity" />
+        <activity android:name=".beaches.ui.BeachesActivity" />
     </application>
 
 </manifest>

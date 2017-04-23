@@ -26,12 +26,11 @@ import java.net.URL;
 
 public class LoginAsyncTask extends AsyncTask<String, Void, User> {
 
-    private NetworkFragment fragment;
+    private RetainedFragment fragment;
 
-    public LoginAsyncTask(NetworkFragment fragment) {
+    public LoginAsyncTask(RetainedFragment fragment) {
         this.fragment = fragment;
     }
-
 
     @Override
     protected User doInBackground(String... strings) {

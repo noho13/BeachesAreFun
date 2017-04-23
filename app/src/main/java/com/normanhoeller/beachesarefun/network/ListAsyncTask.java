@@ -1,6 +1,5 @@
 package com.normanhoeller.beachesarefun.network;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
@@ -26,17 +25,16 @@ import java.util.List;
 public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
 
     private final static String TAG = ListAsyncTask.class.getSimpleName();
-    public final static String BASE_URL = "139.59.158.8:3000";
-    private NetworkFragment fragment;
+    private RetainedFragment fragment;
 
-    public ListAsyncTask(NetworkFragment fragment) {
+    public ListAsyncTask(RetainedFragment fragment) {
         this.fragment = fragment;
     }
 
     @Override
     protected List<BeachModel> doInBackground(String... strings) {
-        String page = strings[0];
-        String json = loadPageOfPictures(page);
+        String urlAsString = strings[0];
+        String json = loadPageOfPictures(urlAsString);
         return parseJson(json);
     }
 
@@ -45,14 +43,7 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
         fragment.setResult(beaches);
     }
 
-    public String loadPageOfPictures(String page) {
-        Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder
-                .scheme("http")
-                .encodedAuthority(BASE_URL)
-                .appendPath("beaches")
-                .appendQueryParameter("page", page);
-        String urlAsString = uriBuilder.build().toString();
+    public String loadPageOfPictures(String urlAsString) {
         try {
             URL url = new URL(urlAsString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

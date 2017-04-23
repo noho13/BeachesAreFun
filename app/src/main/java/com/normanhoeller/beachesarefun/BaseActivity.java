@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.normanhoeller.beachesarefun.network.NetworkFragment;
+import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
 /**
  * Created by norman on 22/04/17.
@@ -12,7 +12,7 @@ import com.normanhoeller.beachesarefun.network.NetworkFragment;
 
 public class BaseActivity extends AppCompatActivity {
 
-    protected NetworkFragment fragment;
+    protected RetainedFragment fragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,10 +21,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void setupWorker() {
-        fragment = (NetworkFragment) getSupportFragmentManager().findFragmentByTag(NetworkFragment.FRAG_TAG);
+        fragment = (RetainedFragment) getSupportFragmentManager().findFragmentByTag(RetainedFragment.FRAG_TAG);
         if (fragment == null) {
-            fragment = new NetworkFragment();
-            getSupportFragmentManager().beginTransaction().add(fragment, NetworkFragment.FRAG_TAG).commit();
+            fragment = new RetainedFragment();
+            getSupportFragmentManager().beginTransaction().add(fragment, RetainedFragment.FRAG_TAG).commit();
         }
     }
 }

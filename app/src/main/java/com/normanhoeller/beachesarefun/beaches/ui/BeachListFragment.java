@@ -1,4 +1,4 @@
-package com.normanhoeller.beachesarefun.beaches;
+package com.normanhoeller.beachesarefun.beaches.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.normanhoeller.beachesarefun.network.NetworkFragment;
+import com.normanhoeller.beachesarefun.Utils;
+import com.normanhoeller.beachesarefun.beaches.BeachModel;
+import com.normanhoeller.beachesarefun.network.RetainedFragment;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
 
@@ -63,7 +65,7 @@ public class BeachListFragment extends Fragment {
 
                 int totalItemCount = layoutManager.getItemCount();
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                int currentPage = totalItemCount / NetworkFragment.PAGE_SIZE;
+                int currentPage = totalItemCount / Utils.PAGE_SIZE;
                 if (lastVisibleItemPosition == totalItemCount - 1 && totalItemCount < 19) {
                     Log.d(TAG, "loading next page - current: " + currentPage);
 //                    loadMoreItems(currentPage + 1);
@@ -78,7 +80,7 @@ public class BeachListFragment extends Fragment {
     }
 
     private void loadMoreItems(int page) {
-        NetworkFragment fragment = (NetworkFragment) getFragmentManager().findFragmentByTag(NetworkFragment.FRAG_TAG);
+        RetainedFragment fragment = (RetainedFragment) getFragmentManager().findFragmentByTag(RetainedFragment.FRAG_TAG);
         if (fragment != null) {
             fragment.loadPageOfPictures(page);
         }

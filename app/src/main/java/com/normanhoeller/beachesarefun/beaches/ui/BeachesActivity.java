@@ -1,4 +1,4 @@
-package com.normanhoeller.beachesarefun.beaches;
+package com.normanhoeller.beachesarefun.beaches.ui;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,7 +12,6 @@ public class BeachesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (savedInstanceState == null) {
             BeachListFragment fragment = BeachListFragment.createInstance();
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();

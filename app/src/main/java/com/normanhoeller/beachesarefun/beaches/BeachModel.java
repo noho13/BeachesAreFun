@@ -1,19 +1,16 @@
 package com.normanhoeller.beachesarefun.beaches;
 
 import android.databinding.BindingAdapter;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.network.ImageAsyncTask;
 
 import java.lang.ref.WeakReference;
-import java.util.Random;
-
-import static com.normanhoeller.beachesarefun.network.ListAsyncTask.BASE_URL;
 
 /**
  * Created by norman on 22/04/17.
@@ -55,7 +52,7 @@ public class BeachModel {
             ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl);
             DrawableWrapper drawableWrapper = new DrawableWrapper(new WeakReference<>(imageAsyncTask));
             imageView.setImageDrawable(drawableWrapper);
-            imageAsyncTask.execute(imageUrl);
+            imageAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);
         }
     }
 
@@ -88,37 +85,14 @@ public class BeachModel {
     }
 
     public String imageUrl() {
-        Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder
-                .scheme("http")
-                .encodedAuthority(BASE_URL)
-                .appendEncodedPath(url);
-        return uriBuilder.build().toString();
+        return Utils.getStringURL(url, null);
     }
 
     public int getWidthInDP() {
-        int widthInPixel = Integer.parseInt(width);
-//        Log.d("Model", "width: " + widthInPixel);
-//        DisplayMetrics displaymetrics = new DisplayMetrics();
-//        int dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, widthInPixel, displaymetrics);
-//        Log.d("Model", "dp: " + dp);
-        return widthInPixel;
+        return Integer.parseInt(width);
     }
 
     public int getHeightInDP() {
-        int heightInPixel = Integer.parseInt(height);
-//        DisplayMetrics displaymetrics = new DisplayMetrics();
-//        int dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightInPixel, displaymetrics);
-        return heightInPixel;
+        return Integer.parseInt(height);
     }
-
-    public int getRandomBackgroundColor() {
-        Random random = new Random();
-        int r = random.nextInt(255);
-        int g = random.nextInt(255);
-        int b = random.nextInt(255);
-        return Color.rgb(r, g, b);
-    }
-
-
 }
