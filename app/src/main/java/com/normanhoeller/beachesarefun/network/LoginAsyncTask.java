@@ -79,7 +79,7 @@ public class LoginAsyncTask extends AsyncTask<String, Void, User> {
     }
 
     private void writeStream(OutputStream os, String json) {
-        BufferedWriter writer = null;
+        BufferedWriter writer;
         try {
             writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
