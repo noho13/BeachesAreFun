@@ -1,10 +1,9 @@
-package com.normanhoeller.beachesarefun.beaches.network;
+package com.normanhoeller.beachesarefun.network;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
-import com.normanhoeller.beachesarefun.NetworkFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;

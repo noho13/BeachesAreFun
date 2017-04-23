@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.normanhoeller.beachesarefun.NetworkFragment;
+import com.normanhoeller.beachesarefun.network.NetworkFragment;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
 

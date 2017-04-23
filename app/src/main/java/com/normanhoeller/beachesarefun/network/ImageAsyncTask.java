@@ -1,4 +1,4 @@
-package com.normanhoeller.beachesarefun.beaches.network;
+package com.normanhoeller.beachesarefun.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

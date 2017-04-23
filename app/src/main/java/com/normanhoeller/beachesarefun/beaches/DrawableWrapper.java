@@ -1,7 +1,9 @@
-package com.normanhoeller.beachesarefun.beaches.network;
+package com.normanhoeller.beachesarefun.beaches;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+
+import com.normanhoeller.beachesarefun.network.ImageAsyncTask;
 
 import java.lang.ref.WeakReference;
 import java.util.Random;

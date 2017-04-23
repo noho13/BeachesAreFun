@@ -1,8 +1,12 @@
-package com.normanhoeller.beachesarefun.login;
+package com.normanhoeller.beachesarefun.network;
 
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
+
+import com.normanhoeller.beachesarefun.login.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -20,21 +24,28 @@ import java.net.URL;
  * Created by norman on 22/04/17.
  */
 
-public class LoginAsyncTask extends AsyncTask<String, Void, String> {
+public class LoginAsyncTask extends AsyncTask<String, Void, User> {
+
+    private NetworkFragment fragment;
+
+    public LoginAsyncTask(NetworkFragment fragment) {
+        this.fragment = fragment;
+    }
+
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected User doInBackground(String... strings) {
         String url = strings[0];
         String payload = strings[1];
         return post(url, payload);
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        Log.d("Login", s);
+    protected void onPostExecute(User user) {
+        fragment.setLoginResult(user);
     }
 
-    private String post(String urlString, String json) {
+    private User post(String urlString, String json) {
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(urlString);
@@ -44,7 +55,6 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
             urlConnection.setFixedLengthStreamingMode(json.length());
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestProperty("Cache-Control", "no-cache");
-//            urlConnection.setChunkedStreamingMode(0);
 
             OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
             writeStream(out, json);
@@ -53,16 +63,15 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String token = urlConnection.getHeaderField("x-auth");
-                saveToken(token);
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                return readStream(in);
+                return readStream(in, token);
             } else {
                 InputStream in = new BufferedInputStream(urlConnection.getErrorStream());
-                return readStream(in);
+                return readStream(in, null);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
+            return null;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -85,7 +94,7 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
 
     }
 
-    private String readStream(InputStream in) throws IOException {
+    private User readStream(InputStream in, String token) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder out = new StringBuilder();
         String line;
@@ -93,11 +102,20 @@ public class LoginAsyncTask extends AsyncTask<String, Void, String> {
             out.append(line);
         }
         String result = out.toString();
+        Log.d("Login", result);
         reader.close();
-        return result;
+        return parseJson(result, token);
     }
 
-    private void saveToken(String token) {
-        Log.d("Login", "token: " + token);
+    private User parseJson(String json, String token) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            String id = jsonObject.getString("_id");
+            String email = jsonObject.getString("email");
+            return new User(id, email, token);
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 }

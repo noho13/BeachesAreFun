@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.normanhoeller.beachesarefun.NetworkFragment;
+import com.normanhoeller.beachesarefun.network.NetworkFragment;
 import com.normanhoeller.beachesarefun.R;
-import com.normanhoeller.beachesarefun.beaches.network.ListAsyncTask;
+import com.normanhoeller.beachesarefun.network.ListAsyncTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;

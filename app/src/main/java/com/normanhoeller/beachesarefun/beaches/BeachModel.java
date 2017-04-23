@@ -8,13 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.normanhoeller.beachesarefun.beaches.network.DrawableWrapper;
-import com.normanhoeller.beachesarefun.beaches.network.ImageAsyncTask;
+import com.normanhoeller.beachesarefun.network.ImageAsyncTask;
 
 import java.lang.ref.WeakReference;
 import java.util.Random;
 
-import static com.normanhoeller.beachesarefun.beaches.network.ListAsyncTask.BASE_URL;
+import static com.normanhoeller.beachesarefun.network.ListAsyncTask.BASE_URL;
 
 /**
  * Created by norman on 22/04/17.
