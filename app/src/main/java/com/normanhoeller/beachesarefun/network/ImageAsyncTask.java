@@ -3,6 +3,7 @@ package com.normanhoeller.beachesarefun.network;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
@@ -22,16 +23,24 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     private final WeakReference<ImageView> imageViewReference;
     private String url;
+    private LruCache<String, Bitmap> memoryCache;
 
-    public ImageAsyncTask(ImageView imageView, String url) {
+    public ImageAsyncTask(ImageView imageView, String url, LruCache<String, Bitmap> memCache) {
         this.imageViewReference = new WeakReference<>(imageView);
         this.url = url;
+        this.memoryCache = memCache;
     }
 
     @Override
     protected Bitmap doInBackground(String... strings) {
         String urlAsString = strings[0];
-        return downloadImageData(urlAsString);
+        Bitmap bitmap = memoryCache.get(urlAsString);
+        if (bitmap != null) {
+            return bitmap;
+        }
+        bitmap = downloadImageData(urlAsString);
+        addBitmapToMemoryCache(urlAsString, bitmap);
+        return bitmap;
     }
 
     @Override
@@ -69,4 +78,15 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
     public String getUrl() {
         return url;
     }
+
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            memoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return memoryCache.get(key);
+    }
+
 }

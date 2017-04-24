@@ -7,6 +7,10 @@
         <variable
             name="beach"
             type="com.normanhoeller.beachesarefun.beaches.BeachModel" />
+
+        <variable
+            name="cacheWrapper"
+            type="com.normanhoeller.beachesarefun.beaches.CacheWrapper" />
     </data>
 
     <LinearLayout
@@ -18,7 +22,9 @@
         <ImageView
             android:layout_width="@{beach.widthInDP, default=match_parent}"
             android:layout_height="@{beach.heightInDP, default=wrap_content}"
-            app:imageUrl="@{beach.imageUrl}" />
+            app:imageUrl="@{beach.imageUrl}"
+            app:memCache="@{cacheWrapper.getMemCache}"
+            />
 
         <TextView
             android:layout_width="wrap_content"

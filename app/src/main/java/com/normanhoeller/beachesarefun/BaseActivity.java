@@ -27,4 +27,8 @@ public class BaseActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(fragment, RetainedFragment.FRAG_TAG).commit();
         }
     }
+
+    public RetainedFragment getRetainedFragment() {
+        return fragment;
+    }
 }

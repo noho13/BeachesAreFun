@@ -1,8 +1,10 @@
 package com.normanhoeller.beachesarefun.beaches;
 
 import android.databinding.BindingAdapter;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,10 +48,10 @@ public class BeachModel {
         view.setLayoutParams(layoutParams);
     }
 
-    @BindingAdapter("app:imageUrl")
-    public static void setImageBitmap(ImageView imageView, String imageUrl) {
+    @BindingAdapter(value = {"imageUrl", "memCache"}, requireAll = false)
+    public static void setImageBitmap(ImageView imageView, String imageUrl, LruCache<String, Bitmap> memCache) {
         if (noOnGoingDownloadWork(imageView, imageUrl)) {
-            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl);
+            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache);
             DrawableWrapper drawableWrapper = new DrawableWrapper(new WeakReference<>(imageAsyncTask));
             imageView.setImageDrawable(drawableWrapper);
             imageAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);

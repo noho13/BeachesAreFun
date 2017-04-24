@@ -2,10 +2,12 @@ package com.normanhoeller.beachesarefun.network;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.normanhoeller.beachesarefun.Utils;
@@ -28,16 +30,34 @@ public class RetainedFragment extends Fragment {
 
     public static final String FRAG_TAG = "network_fragment";
     private final static String TAG = RetainedFragment.class.getSimpleName();
+    private LruCache<String, Bitmap> memCache;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 8;
+
+         memCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    public LruCache<String, Bitmap> getMemCache() {
+        return memCache;
     }
 
     public void loadPageOfPictures(int page) {

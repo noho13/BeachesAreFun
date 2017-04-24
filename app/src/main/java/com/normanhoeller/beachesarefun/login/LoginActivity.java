@@ -20,12 +20,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        if (!TextUtils.isEmpty(Utils.retrieveToken(this))) {
-            Intent startBeaches = new Intent(this, BeachesActivity.class);
-            startBeaches.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(startBeaches);
-            return;
-        }
         if (savedInstanceState == null) {
             LoginFragment fragment = LoginFragment.createInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.fl_container, fragment).commit();

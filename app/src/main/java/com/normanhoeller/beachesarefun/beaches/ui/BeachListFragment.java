@@ -1,22 +1,23 @@
 package com.normanhoeller.beachesarefun.beaches.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
+import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
@@ -33,6 +34,8 @@ public class BeachListFragment extends Fragment {
     private BeachAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private boolean loading;
+
 
     public static BeachListFragment createInstance() {
         return new BeachListFragment();
@@ -51,43 +54,47 @@ public class BeachListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Toolbar toolbar = (Toolbar) getView().findViewById(R.id.tb_toolbar);
+        BaseActivity activity = ((BaseActivity) getActivity());
         if (toolbar != null) {
             toolbar.setTitle(getString(R.string.app_name));
-            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            activity.setSupportActionBar(toolbar);
         }
 
-
-        adapter = new BeachAdapter();
+        adapter = new BeachAdapter(activity.getRetainedFragment().getMemCache());
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 //        final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                int totalItemCount = layoutManager.getItemCount();
-//                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-//                int currentPage = totalItemCount / Utils.PAGE_SIZE;
-//                if (lastVisibleItemPosition == totalItemCount - 1 && totalItemCount < 19) {
-//                    Log.d(TAG, "loading next page - current: " + currentPage);
-////                    loadMoreItems(currentPage + 1);
-//                }
-//            }
-//        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                int currentPage = totalItemCount / Utils.PAGE_SIZE;
+                if (!loading && lastVisibleItemPosition == totalItemCount - 1 && totalItemCount < 31) {
+                    Log.d(TAG, "loading next page - current: " + currentPage);
+                    loading = true;
+                    loadMoreItems(currentPage + 1);
+                }
+            }
+        });
     }
 
 
     public void setBeaches(List<BeachModel> beaches) {
         Log.d(TAG, "got beaches: " + beaches.size());
-        recyclerView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+        loading = false;
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
         adapter.setBeachModelList(beaches);
     }
 
