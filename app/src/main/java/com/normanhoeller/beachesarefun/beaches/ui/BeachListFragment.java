@@ -86,7 +86,7 @@ public class BeachListFragment extends Fragment {
 
                 Arrays.sort(lastVisibleItemPosition);
                 int currentPage = totalItemCount / Utils.PAGE_SIZE;
-                if (!loading && lastVisibleItemPosition[1] == totalItemCount - 1 && !lastPageLoaded /*&& totalItemCount < 31*/) {
+                if (!loading && lastVisibleItemPosition[1] > totalItemCount - 4 && !lastPageLoaded /*&& totalItemCount < 31*/) {
                     Log.d(TAG, "loading next page - current: " + currentPage);
                     loading = true;
                     loadMoreItems(currentPage + 1);
