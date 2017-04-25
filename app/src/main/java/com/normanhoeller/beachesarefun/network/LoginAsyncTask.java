@@ -1,6 +1,7 @@
 package com.normanhoeller.beachesarefun.network;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.normanhoeller.beachesarefun.login.User;
@@ -114,7 +115,7 @@ public class LoginAsyncTask extends AsyncTask<String, Void, User> {
             return new User(id, email, token);
         } catch (JSONException exception) {
             exception.printStackTrace();
-            return null;
+            return new User("Unfortunately, an error has happened. Plese try again");
         }
     }
 }

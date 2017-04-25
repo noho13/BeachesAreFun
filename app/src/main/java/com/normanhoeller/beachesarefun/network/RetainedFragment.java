@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.normanhoeller.beachesarefun.BeachError;
+import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
 import com.normanhoeller.beachesarefun.beaches.ui.BeachListFragment;
@@ -36,19 +39,6 @@ public class RetainedFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
-
-         memCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
     }
 
     @Override
@@ -57,6 +47,18 @@ public class RetainedFragment extends Fragment {
     }
 
     public LruCache<String, Bitmap> getMemCache() {
+        if (memCache == null) {
+            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            final int cacheSize = maxMemory / 8;
+            memCache = new LruCache<String, Bitmap>(cacheSize) {
+                @Override
+                protected int sizeOf(String key, Bitmap bitmap) {
+                    // The cache size will be measured in kilobytes rather than
+                    // number of items.
+                    return bitmap.getByteCount() / 1024;
+                }
+            };
+        }
         return memCache;
     }
 
@@ -72,20 +74,36 @@ public class RetainedFragment extends Fragment {
         }
     }
 
+    public void handleError(BeachError error) {
+        ((LoginActivity) getActivity()).showSnackBar(null, error.getErrorText());
+    }
+
     public void postPayload(String url, String payload) {
-        new LoginAsyncTask(this).execute(url, payload);
+        if (Utils.isNetworkAvailable(getContext())) {
+            new LoginAsyncTask(this).execute(url, payload);
+        } else {
+            handleError(new BeachError(getString(R.string.no_internet)));
+        }
+
     }
 
     public void setLoginResult(User user) {
-        if (user != null) {
+        if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
             Utils.storeToken(getContext(), user.getToken());
             Intent startImages = new Intent(getActivity(), BeachesActivity.class);
             startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(startImages);
+        } else {
+            handleError(new BeachError(user.getErrorMessage()));
         }
     }
 
     public void logoutCurrentUser() {
+        if (!Utils.isNetworkAvailable(getContext())) {
+            handleError(new BeachError(getString(R.string.no_internet)));
+            return;
+        }
+
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... voids) {

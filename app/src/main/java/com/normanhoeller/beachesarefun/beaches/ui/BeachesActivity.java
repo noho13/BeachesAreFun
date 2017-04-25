@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
+import com.normanhoeller.beachesarefun.Utils;
 
 public class BeachesActivity extends BaseActivity {
 
@@ -16,7 +17,12 @@ public class BeachesActivity extends BaseActivity {
             BeachListFragment fragment = BeachListFragment.createInstance();
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
         }
-        fragment.loadPageOfPictures(1);
+        if (Utils.isNetworkAvailable(this)) {
+            fragment.loadPageOfPictures(1);
+        } else {
+            showSnackBar(findViewById(android.R.id.content), getString(R.string.no_internet));
+        }
+
     }
 
     @Override

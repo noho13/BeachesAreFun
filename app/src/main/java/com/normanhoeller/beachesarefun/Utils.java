@@ -2,6 +2,8 @@ package com.normanhoeller.beachesarefun;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -47,5 +49,12 @@ public class Utils {
         SharedPreferences prefs = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), MODE_PRIVATE);
         prefs.edit().clear().apply();
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

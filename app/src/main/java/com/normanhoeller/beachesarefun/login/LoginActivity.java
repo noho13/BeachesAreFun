@@ -1,14 +1,11 @@
 package com.normanhoeller.beachesarefun.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.view.View;
 
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
-import com.normanhoeller.beachesarefun.Utils;
-import com.normanhoeller.beachesarefun.beaches.ui.BeachesActivity;
 
 /**
  * Created by norman on 22/04/17.
@@ -24,5 +21,10 @@ public class LoginActivity extends BaseActivity {
             LoginFragment fragment = LoginFragment.createInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.fl_container, fragment).commit();
         }
+    }
+
+    @Override
+    public void showSnackBar(View view, String text) {
+        super.showSnackBar(findViewById(R.id.fl_container), text);
     }
 }

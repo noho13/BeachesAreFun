@@ -9,4 +9,7 @@
     <string name="about_me">About me</string>
     <string name="logout">Logout</string>
     <string name="welcome">Welcome</string>
+    <string name="ok">OK</string>
+    <string name="no_internet">Sry, no conncection available</string>
+    <string name="creds_illegal">Credentials seem to be illegal</string>
 </resources>

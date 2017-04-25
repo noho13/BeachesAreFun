@@ -20,14 +20,14 @@ import java.lang.ref.WeakReference;
 
 public class BeachModel {
 
-    private String _id;
+    private String id;
     private String name;
     private String url;
     private String width;
     private String height;
 
-    public BeachModel(String _id, String name, String url, String width, String height) {
-        this._id = _id;
+    public BeachModel(String id, String name, String url, String width, String height) {
+        this.id = id;
         this.name = name;
         this.url = url;
         this.width = width;
@@ -79,7 +79,7 @@ public class BeachModel {
     }
 
     public String getId() {
-        return _id;
+        return id;
     }
 
     public String getName() {

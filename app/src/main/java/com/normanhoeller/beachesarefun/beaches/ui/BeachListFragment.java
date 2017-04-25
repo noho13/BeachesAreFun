@@ -1,11 +1,8 @@
 package com.normanhoeller.beachesarefun.beaches.ui;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.LruCache;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -87,7 +84,6 @@ public class BeachListFragment extends Fragment {
         });
     }
 
-
     public void setBeaches(List<BeachModel> beaches) {
         Log.d(TAG, "got beaches: " + beaches.size());
         loading = false;
@@ -100,8 +96,10 @@ public class BeachListFragment extends Fragment {
 
     private void loadMoreItems(int page) {
         RetainedFragment fragment = (RetainedFragment) getFragmentManager().findFragmentByTag(RetainedFragment.FRAG_TAG);
-        if (fragment != null) {
+        if (fragment != null && Utils.isNetworkAvailable(fragment.getContext())) {
             fragment.loadPageOfPictures(page);
+        } else {
+            ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.no_internet));
         }
     }
 }

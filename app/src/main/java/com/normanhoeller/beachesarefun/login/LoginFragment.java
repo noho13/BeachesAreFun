@@ -1,5 +1,7 @@
 package com.normanhoeller.beachesarefun.login;
 
+import android.accounts.AuthenticatorException;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,15 +9,20 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by norman on 22/04/17.
@@ -51,29 +58,55 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         retainedFragment = (RetainedFragment) getFragmentManager().findFragmentByTag(RetainedFragment.FRAG_TAG);
     }
 
-    private String getPayload() {
+    private String getPayload() throws AuthenticatorException {
         String name = userName.getText().toString();
         String passwordString = password.getText().toString();
         JSONObject payload = new JSONObject();
-        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(passwordString)) {
+        if (checkEmail(name) && checkPassword(passwordString)) {
             try {
                 payload.put("email", name);
                 payload.put("password", passwordString);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else {
+            throw new AuthenticatorException(getString(R.string.creds_illegal));
         }
         return payload.toString();
     }
 
     @Override
     public void onClick(View view) {
+        hideKeyboard(view);
         if (retainedFragment != null) {
-            if (view.getId() == R.id.btn_login) {
-                retainedFragment.postPayload(Utils.getStringURL("user/login", null), getPayload());
-            } else {
-                retainedFragment.postPayload(Utils.getStringURL("user/register", null), getPayload());
+            try {
+                String payLoad = getPayload();
+                if (view.getId() == R.id.btn_login) {
+                    retainedFragment.postPayload(Utils.getStringURL("user/login", null), payLoad);
+                } else {
+                    retainedFragment.postPayload(Utils.getStringURL("user/register", null), payLoad);
+                }
+            } catch (AuthenticatorException e) {
+                ((BaseActivity) getActivity()).showSnackBar(getView(), e.getMessage());
             }
         }
+    }
+
+    private boolean checkPassword(String password) {
+        return !TextUtils.isEmpty(password) && password.length() >= 6;
+    }
+
+    private boolean checkEmail(String email) {
+        if (TextUtils.isEmpty(email)) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile("^.+@.+\\..+$");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
