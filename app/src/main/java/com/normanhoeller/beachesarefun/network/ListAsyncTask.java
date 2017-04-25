@@ -27,7 +27,7 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
     private final static String TAG = ListAsyncTask.class.getSimpleName();
     private RetainedFragment fragment;
 
-    public ListAsyncTask(RetainedFragment fragment) {
+    ListAsyncTask(RetainedFragment fragment) {
         this.fragment = fragment;
     }
 
@@ -43,7 +43,7 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
         fragment.setResult(beaches);
     }
 
-    public String loadPageOfPictures(String urlAsString) {
+    private String loadPageOfPictures(String urlAsString) {
         try {
             URL url = new URL(urlAsString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -84,10 +84,9 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
                 String height = beach.getString("height");
                 beaches.add(new BeachModel(id, name, url, width, height));
             }
-            return beaches;
         } catch (JSONException e) {
             e.printStackTrace();
-            return beaches;
         }
+        return beaches;
     }
 }

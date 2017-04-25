@@ -32,6 +32,7 @@ public class BeachListFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private boolean loading;
+    private boolean lastPageLoaded;
 
 
     public static BeachListFragment createInstance() {
@@ -75,7 +76,7 @@ public class BeachListFragment extends Fragment {
                 int totalItemCount = layoutManager.getItemCount();
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 int currentPage = totalItemCount / Utils.PAGE_SIZE;
-                if (!loading && lastVisibleItemPosition == totalItemCount - 1 && totalItemCount < 31) {
+                if (!loading && lastVisibleItemPosition == totalItemCount - 1 && !lastPageLoaded /*&& totalItemCount < 31*/) {
                     Log.d(TAG, "loading next page - current: " + currentPage);
                     loading = true;
                     loadMoreItems(currentPage + 1);
@@ -91,7 +92,11 @@ public class BeachListFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
-        adapter.setBeachModelList(beaches);
+        if (beaches.size() > 0) {
+            adapter.setBeachModelList(beaches);
+        } else {
+            lastPageLoaded = true;
+        }
     }
 
     private void loadMoreItems(int page) {
