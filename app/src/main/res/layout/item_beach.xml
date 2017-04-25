@@ -14,7 +14,7 @@
     </data>
 
     <LinearLayout
-        android:layout_width="@{beach.widthInDP, default=match_parent}"
+        android:layout_width="@{cacheWrapper.getSpanWidth, default=match_parent}"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:orientation="vertical">
@@ -24,6 +24,8 @@
             android:layout_height="@{beach.heightInDP, default=wrap_content}"
             app:imageUrl="@{beach.imageUrl}"
             app:memCache="@{cacheWrapper.getMemCache}"
+            android:scaleType="fitXY"
+            android:padding="1dp"
             />
 
         <TextView

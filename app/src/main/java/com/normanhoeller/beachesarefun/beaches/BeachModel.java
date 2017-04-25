@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,9 +36,10 @@ public class BeachModel {
     }
 
     @BindingAdapter("android:layout_width")
-    public static void setLayoutWidth(View view, int width) {
+    public static void setLayoutWidth(View view, int spanWidth) {
+        Log.d("BeachModel", "setting width to: " + spanWidth);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.width = width;
+        layoutParams.width = spanWidth;
         view.setLayoutParams(layoutParams);
     }
 
@@ -97,4 +99,6 @@ public class BeachModel {
     public int getHeightInDP() {
         return Integer.parseInt(height);
     }
+
+
 }

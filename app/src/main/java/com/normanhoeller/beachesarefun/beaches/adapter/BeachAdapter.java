@@ -23,8 +23,8 @@ public class BeachAdapter extends RecyclerView.Adapter<BeachAdapter.ViewHolder> 
     private List<BeachModel> beachModelList;
     private CacheWrapper cacheWrapper;
 
-    public BeachAdapter(LruCache<String, Bitmap> memCache) {
-        this.cacheWrapper = new CacheWrapper(memCache);
+    public BeachAdapter(LruCache<String, Bitmap> memCache, int spanWidth) {
+        this.cacheWrapper = new CacheWrapper(memCache, spanWidth);
     }
 
     public void setBeachModelList(List<BeachModel> beaches) {

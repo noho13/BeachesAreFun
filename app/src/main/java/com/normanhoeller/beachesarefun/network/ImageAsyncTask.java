@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
-import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.BeachModel;
 
 import java.io.BufferedInputStream;
@@ -46,9 +45,6 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-//        if (isCancelled()) {
-//            bitmap = null;
-//        }
         if (imageViewReference != null) {
             ImageView imageView = imageViewReference.get();
             if (imageView != null) {
@@ -89,5 +85,4 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
     public Bitmap getBitmapFromMemCache(String key) {
         return memoryCache.get(key);
     }
-
 }

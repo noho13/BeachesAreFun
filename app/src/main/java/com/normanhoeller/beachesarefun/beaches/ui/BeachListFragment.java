@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.normanhoeller.beachesarefun.beaches.BeachModel;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,10 +61,15 @@ public class BeachListFragment extends Fragment {
             activity.setSupportActionBar(toolbar);
         }
 
-        adapter = new BeachAdapter(activity.getRetainedFragment().getMemCache());
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        Log.d(TAG, "spanWidth: " + metrics.widthPixels / 2);
+
+        adapter = new BeachAdapter(activity.getRetainedFragment().getMemCache(), metrics.widthPixels / 2);
+//        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -73,10 +81,12 @@ public class BeachListFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                int totalItemCount = layoutManager.getItemCount();
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                int totalItemCount = staggeredGridLayoutManager.getItemCount();
+                int[] lastVisibleItemPosition = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null);
+
+                Arrays.sort(lastVisibleItemPosition);
                 int currentPage = totalItemCount / Utils.PAGE_SIZE;
-                if (!loading && lastVisibleItemPosition == totalItemCount - 1 && !lastPageLoaded /*&& totalItemCount < 31*/) {
+                if (!loading && lastVisibleItemPosition[1] == totalItemCount - 1 && !lastPageLoaded /*&& totalItemCount < 31*/) {
                     Log.d(TAG, "loading next page - current: " + currentPage);
                     loading = true;
                     loadMoreItems(currentPage + 1);
