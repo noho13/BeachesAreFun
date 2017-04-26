@@ -13,4 +13,9 @@
     <string name="no_internet">Sry, no conncection available</string>
     <string name="creds_illegal">Credentials seem to be illegal</string>
     <string name="error">Ooops, something went wrong.</string>
+    <string name="working">working...</string>
+    <string name="loggin_in">logging you in</string>
+    <string name="register_you">registering you</string>
+    <string name="load_more">loading more images</string>
+    <string name="no_more_images">all images loaded</string>
 </resources>

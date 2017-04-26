@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.LruCache;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.normanhoeller.beachesarefun.BeachError;
 import com.normanhoeller.beachesarefun.Callback;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
-import com.normanhoeller.beachesarefun.beaches.ui.BeachesActivity;
 import com.normanhoeller.beachesarefun.login.LoginActivity;
 import com.normanhoeller.beachesarefun.login.User;
 
@@ -82,13 +80,7 @@ public class RetainedFragment extends Fragment {
         switch (result.getResultType()) {
             case Utils.LOGIN:
             case Utils.REGISTER:
-                User user = result.getUser();
-                if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
-                    onLoginSuccess(user);
-                } else {
-                    String errorMessage = user != null ? user.getErrorMessage() : getString(R.string.error);
-                    handleError(new BeachError(errorMessage));
-                }
+                callback.setUserResult(result.getUser());
                 break;
             case Utils.BEACHES:
                 callback.setBeachesResult(result.getBeachList());
@@ -98,17 +90,9 @@ public class RetainedFragment extends Fragment {
         }
     }
 
-    private void onLoginSuccess(User user) {
-        Utils.storeToken(getContext(), user.getToken());
-        Intent startImages = new Intent(getActivity(), BeachesActivity.class);
-        startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startImages.putExtra(Utils.START_LOADING, true);
-        startActivity(startImages);
-    }
-
     public void handleError(BeachError error) {
         if (callback != null) {
-            callback.setErrorResult(error);
+            callback.setUserResult(new User(error.getErrorText()));
         }
     }
 

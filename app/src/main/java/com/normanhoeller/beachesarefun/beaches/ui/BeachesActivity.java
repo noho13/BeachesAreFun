@@ -3,6 +3,7 @@ package com.normanhoeller.beachesarefun.beaches.ui;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
@@ -20,9 +21,12 @@ public class BeachesActivity extends BaseActivity {
             BeachListFragment fragment = BeachListFragment.createInstance();
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
         }
-        // Flag to prevent loading for tests...alternatively one could Inject a Dependency that gets mocked in test
-        if (Utils.isNetworkAvailable(this) && getIntent().getBooleanExtra(Utils.START_LOADING, false)) {
-            fragment.loadPageOfPictures(1);
+
+        if (Utils.isNetworkAvailable(this)) {
+            // Flag to prevent loading for tests...alternatively one could Inject a Dependency that gets mocked in test
+            if (getIntent().getBooleanExtra(Utils.START_LOADING, false)) {
+                fragment.loadPageOfPictures(1);
+            }
         } else {
             showSnackBar(findViewById(android.R.id.content), getString(R.string.no_internet));
         }

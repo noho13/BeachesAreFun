@@ -96,8 +96,10 @@ public class BeachListFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         }
         if (beaches.size() > 0) {
+            ((BaseActivity) getActivity()).dismissSnackBar();
             adapter.setBeachList(beaches);
         } else {
+            ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.no_more_images));
             lastPageLoaded = true;
         }
     }
@@ -105,6 +107,7 @@ public class BeachListFragment extends Fragment {
     private void loadMoreItems(int page) {
         RetainedFragment fragment = (RetainedFragment) getFragmentManager().findFragmentByTag(RetainedFragment.FRAG_TAG);
         if (fragment != null && Utils.isNetworkAvailable(fragment.getContext())) {
+            ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.load_more));
             fragment.loadPageOfPictures(page);
         } else {
             ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.no_internet));

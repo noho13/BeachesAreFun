@@ -1,6 +1,7 @@
 package com.normanhoeller.beachesarefun;
 
 import com.normanhoeller.beachesarefun.beaches.Beach;
+import com.normanhoeller.beachesarefun.login.User;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface Callback {
 
     void setBeachesResult(List<Beach> beaches);
 
-    void setErrorResult(BeachError error);
+    void setUserResult(User user);
 }

@@ -2,6 +2,7 @@ package com.normanhoeller.beachesarefun.login;
 
 import android.accounts.AuthenticatorException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
+import com.normanhoeller.beachesarefun.beaches.ui.BeachesActivity;
 import com.normanhoeller.beachesarefun.network.BeachRequest;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
@@ -83,13 +85,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             try {
                 BeachRequest request;
                 String payLoad = getPayload();
+                String message;
                 if (view.getId() == R.id.btn_login) {
+                    message = getString(R.string.loggin_in);
                     request = BeachRequest.createBeachRequest(Utils.LOGIN, "user/login", payLoad);
                     retainedFragment.postUserCredentials(request);
                 } else {
                     request = BeachRequest.createBeachRequest(Utils.LOGIN, "user/register", payLoad);
                     retainedFragment.postUserCredentials(request);
+                    message = getString(R.string.register_you);
                 }
+                ((BaseActivity) getActivity()).showSnackBar(getView(), message);
             } catch (AuthenticatorException e) {
                 ((BaseActivity) getActivity()).showSnackBar(getView(), e.getMessage());
             }
@@ -112,5 +118,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void onLoginSuccess() {
+        Intent startImages = new Intent(getActivity(), BeachesActivity.class);
+        startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startImages.putExtra(Utils.START_LOADING, true);
+        startActivity(startImages);
     }
 }

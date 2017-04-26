@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.normanhoeller.beachesarefun.beaches.Beach;
+import com.normanhoeller.beachesarefun.login.User;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
 import java.util.List;
@@ -49,11 +50,15 @@ public class BaseActivity extends AppCompatActivity implements Callback {
         snackbar.show();
     }
 
-    @Override
-    protected void onDestroy() {
+    public void dismissSnackBar() {
         if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dismissSnackBar();
         super.onDestroy();
     }
 
@@ -62,7 +67,6 @@ public class BaseActivity extends AppCompatActivity implements Callback {
     }
 
     @Override
-    public void setErrorResult(BeachError error) {
+    public void setUserResult(User user) {
     }
-
 }

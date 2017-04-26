@@ -2,6 +2,7 @@ package com.normanhoeller.beachesarefun.login;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.BeachError;
@@ -24,7 +25,15 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void setErrorResult(BeachError error) {
-        showSnackBar(findViewById(R.id.fl_container), error.getErrorText());
+    public void setUserResult(User user) {
+        LoginFragment fragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.fl_container);
+        if (fragment != null) {
+            if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
+                fragment.onLoginSuccess();
+            } else {
+                String errorMessage = user != null ? user.getErrorMessage() : getString(R.string.error);
+                showSnackBar(findViewById(R.id.fl_container), errorMessage);
+            }
+        }
     }
 }
