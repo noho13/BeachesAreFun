@@ -12,4 +12,5 @@
     <string name="ok">OK</string>
     <string name="no_internet">Sry, no conncection available</string>
     <string name="creds_illegal">Credentials seem to be illegal</string>
+    <string name="error">Ooops, something went wrong.</string>
 </resources>

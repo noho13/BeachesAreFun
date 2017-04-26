@@ -49,11 +49,6 @@ public class RetainedFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         callback = null;
@@ -89,12 +84,10 @@ public class RetainedFragment extends Fragment {
             case Utils.REGISTER:
                 User user = result.getUser();
                 if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
-                    Utils.storeToken(getContext(), user.getToken());
-                    Intent startImages = new Intent(getActivity(), BeachesActivity.class);
-                    startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(startImages);
+                    onLoginSuccess(user);
                 } else {
-                    handleError(new BeachError(user.getErrorMessage()));
+                    String errorMessage = user != null ? user.getErrorMessage() : getString(R.string.error);
+                    handleError(new BeachError(errorMessage));
                 }
                 break;
             case Utils.BEACHES:
@@ -103,6 +96,13 @@ public class RetainedFragment extends Fragment {
             default:
                 throw new IllegalArgumentException("result type not supported");
         }
+    }
+
+    private void onLoginSuccess(User user) {
+        Utils.storeToken(getContext(), user.getToken());
+        Intent startImages = new Intent(getActivity(), BeachesActivity.class);
+        startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(startImages);
     }
 
     public void handleError(BeachError error) {

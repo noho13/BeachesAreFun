@@ -21,7 +21,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="@{beach.heightInDP, default=wrap_content}"
+            android:layout_height="@{beach.height, default=wrap_content}"
             app:imageUrl="@{beach.imageUrl}"
             app:memCache="@{cacheWrapper.getMemCache}"
             android:scaleType="fitXY"

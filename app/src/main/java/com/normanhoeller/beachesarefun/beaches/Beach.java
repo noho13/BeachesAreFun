@@ -92,11 +92,11 @@ public class Beach {
         return Utils.getStringURL(url, null);
     }
 
-    public int getWidthInDP() {
+    public int getWidth() {
         return Integer.parseInt(width);
     }
 
-    public int getHeightInDP() {
+    public int getHeight() {
         return Integer.parseInt(height);
     }
 

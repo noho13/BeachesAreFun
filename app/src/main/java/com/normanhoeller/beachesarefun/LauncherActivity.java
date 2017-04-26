@@ -21,12 +21,8 @@ public class LauncherActivity extends Activity {
         Intent startNextActivity;
         if (!TextUtils.isEmpty(Utils.retrieveToken(this))) {
             startNextActivity = new Intent(this, BeachesActivity.class);
-//            startBeaches.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(startBeaches);
         } else {
             startNextActivity = new Intent(this, LoginActivity.class);
-//            loginActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(loginActivity);
         }
         startActivity(startNextActivity);
         finish();
