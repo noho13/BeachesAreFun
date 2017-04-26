@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
+import com.normanhoeller.beachesarefun.network.BeachRequest;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
 import org.json.JSONException;
@@ -80,11 +81,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         hideKeyboard(view);
         if (retainedFragment != null) {
             try {
+                BeachRequest request;
                 String payLoad = getPayload();
                 if (view.getId() == R.id.btn_login) {
-                    retainedFragment.postPayload(Utils.getStringURL("user/login", null), payLoad);
+                    request = BeachRequest.createBeachRequest(Utils.LOGIN, "user/login", payLoad);
+                    retainedFragment.postUserCredentials(request);
                 } else {
-                    retainedFragment.postPayload(Utils.getStringURL("user/register", null), payLoad);
+                    request = BeachRequest.createBeachRequest(Utils.LOGIN, "user/register", payLoad);
+                    retainedFragment.postUserCredentials(request);
                 }
             } catch (AuthenticatorException e) {
                 ((BaseActivity) getActivity()).showSnackBar(getView(), e.getMessage());

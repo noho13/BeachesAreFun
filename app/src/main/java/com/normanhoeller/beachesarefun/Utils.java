@@ -15,6 +15,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Utils {
 
+    public static final int REGISTER = 1;
+    public static final int LOGIN = 0;
+    public static final int BEACHES = 2;
     public static final int PAGE_SIZE = 6;
     private static final String TOKEN = "token";
     private static final String BASE_URL = "139.59.158.8:3000";

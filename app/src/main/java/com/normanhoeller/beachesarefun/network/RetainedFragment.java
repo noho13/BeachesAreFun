@@ -15,7 +15,6 @@ import com.normanhoeller.beachesarefun.BeachError;
 import com.normanhoeller.beachesarefun.Callback;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
-import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.beaches.ui.BeachesActivity;
 import com.normanhoeller.beachesarefun.login.LoginActivity;
 import com.normanhoeller.beachesarefun.login.User;
@@ -23,7 +22,6 @@ import com.normanhoeller.beachesarefun.login.User;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Created by norman on 22/04/17.
@@ -42,7 +40,6 @@ public class RetainedFragment extends Fragment {
         if (context instanceof Callback) {
             callback = (Callback) context;
         }
-
     }
 
     @Override
@@ -79,13 +76,25 @@ public class RetainedFragment extends Fragment {
     }
 
     public void loadPageOfPictures(int page) {
-        String url = Utils.getStringURL("beaches", String.valueOf(page));
-        new ListAsyncTask(this).execute(String.valueOf(url));
+        BeachRequest request = BeachRequest.createBeachRequest(Utils.BEACHES, page, "beaches");
+        new BeachAsyncTask(this).execute(request);
     }
 
-    public void setResult(List<Beach> beaches) {
-        if (callback != null) {
-            callback.setBeachesResult(beaches);
+    public void setBeachResult(BeachResult result) {
+        if (result.getBeachList() != null) {
+            if (callback != null) {
+                callback.setBeachesResult(result.getBeachList());
+            }
+        } else if (result.getUser() != null) {
+            User user = result.getUser();
+            if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
+                Utils.storeToken(getContext(), user.getToken());
+                Intent startImages = new Intent(getActivity(), BeachesActivity.class);
+                startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(startImages);
+            } else {
+                handleError(new BeachError(user.getErrorMessage()));
+            }
         }
     }
 
@@ -95,24 +104,13 @@ public class RetainedFragment extends Fragment {
         }
     }
 
-    public void postPayload(String url, String payload) {
+    public void postUserCredentials(BeachRequest request) {
         if (Utils.isNetworkAvailable(getContext())) {
-            new LoginAsyncTask(this).execute(url, payload);
+            new BeachAsyncTask(this).execute(request);
         } else {
             handleError(new BeachError(getString(R.string.no_internet)));
         }
 
-    }
-
-    public void setLoginResult(User user) {
-        if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
-            Utils.storeToken(getContext(), user.getToken());
-            Intent startImages = new Intent(getActivity(), BeachesActivity.class);
-            startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(startImages);
-        } else {
-            handleError(new BeachError(user.getErrorMessage()));
-        }
     }
 
     public void logoutCurrentUser() {
