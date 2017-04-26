@@ -81,20 +81,27 @@ public class RetainedFragment extends Fragment {
     }
 
     public void setBeachResult(BeachResult result) {
-        if (result.getBeachList() != null) {
-            if (callback != null) {
+        if (callback == null || result == null) {
+            return;
+        }
+        switch (result.getResultType()) {
+            case Utils.LOGIN:
+            case Utils.REGISTER:
+                User user = result.getUser();
+                if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
+                    Utils.storeToken(getContext(), user.getToken());
+                    Intent startImages = new Intent(getActivity(), BeachesActivity.class);
+                    startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(startImages);
+                } else {
+                    handleError(new BeachError(user.getErrorMessage()));
+                }
+                break;
+            case Utils.BEACHES:
                 callback.setBeachesResult(result.getBeachList());
-            }
-        } else if (result.getUser() != null) {
-            User user = result.getUser();
-            if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
-                Utils.storeToken(getContext(), user.getToken());
-                Intent startImages = new Intent(getActivity(), BeachesActivity.class);
-                startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(startImages);
-            } else {
-                handleError(new BeachError(user.getErrorMessage()));
-            }
+                break;
+            default:
+                throw new IllegalArgumentException("result type not supported");
         }
     }
 

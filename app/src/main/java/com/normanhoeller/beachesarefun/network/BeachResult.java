@@ -13,6 +13,11 @@ class BeachResult {
 
     private List<Beach> beachList;
     private User user;
+    private int resultType;
+
+    public BeachResult(int resultType) {
+        this.resultType = resultType;
+    }
 
     List<Beach> getBeachList() {
         return beachList;
@@ -28,5 +33,9 @@ class BeachResult {
 
     void setUser(User user) {
         this.user = user;
+    }
+
+    public int getResultType() {
+        return resultType;
     }
 }

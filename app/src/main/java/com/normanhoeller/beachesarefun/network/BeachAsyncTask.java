@@ -35,8 +35,8 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
 
     @Override
     protected BeachResult doInBackground(BeachRequest... params) {
-        BeachResult result = new BeachResult();
         BeachRequest request = params[0];
+        BeachResult result = new BeachResult(request.getOperationType());
         switch (request.getOperationType()) {
             case Utils.REGISTER:
             case Utils.LOGIN:
