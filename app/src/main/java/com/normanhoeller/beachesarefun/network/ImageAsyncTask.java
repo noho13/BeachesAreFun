@@ -39,7 +39,9 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
             return bitmap;
         }
         bitmap = downloadImageData(urlAsString);
-        addBitmapToMemoryCache(urlAsString, bitmap);
+        if (bitmap != null) {
+            addBitmapToMemoryCache(urlAsString, bitmap);
+        }
         return bitmap;
     }
 
@@ -63,12 +65,12 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
         try {
             URL url = new URL(urlAsString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                return BitmapFactory.decodeStream(in);
-            } finally {
-                urlConnection.disconnect();
-            }
+            int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+            urlConnection.addRequestProperty("Cache-Control", "max-stale=" + maxStale);
+            urlConnection.setUseCaches(true);
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            return BitmapFactory.decodeStream(in);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

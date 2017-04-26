@@ -1,5 +1,6 @@
 package com.normanhoeller.beachesarefun.beaches.ui;
 
+import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +50,15 @@ public class BeachesActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
         }
     }
 
