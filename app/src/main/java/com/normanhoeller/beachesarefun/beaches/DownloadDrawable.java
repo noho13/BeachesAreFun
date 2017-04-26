@@ -12,11 +12,11 @@ import java.util.Random;
  * Created by norman on 22/04/17.
  */
 
-public class DrawableWrapper extends ColorDrawable {
+class DownloadDrawable extends ColorDrawable {
 
     private final WeakReference<ImageAsyncTask> bitmapDownloaderTaskReference;
 
-    public DrawableWrapper(WeakReference<ImageAsyncTask> bitmapDownloaderTaskReference) {
+    DownloadDrawable(WeakReference<ImageAsyncTask> bitmapDownloaderTaskReference) {
         this.bitmapDownloaderTaskReference = bitmapDownloaderTaskReference;
         setColor(getRandomBackgroundColor());
     }
@@ -29,7 +29,7 @@ public class DrawableWrapper extends ColorDrawable {
         return Color.rgb(r, g, b);
     }
 
-    public ImageAsyncTask getBitmapDownloaderTaskReference() {
+    ImageAsyncTask getBitmapDownloaderTaskReference() {
         return bitmapDownloaderTaskReference.get();
     }
 }

@@ -6,13 +6,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
+
+import java.util.List;
 
 /**
  * Created by norman on 22/04/17.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements Callback {
 
     protected RetainedFragment fragment;
     protected Snackbar snackbar;
@@ -53,4 +56,13 @@ public class BaseActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
+    @Override
+    public void setBeachesResult(List<Beach> beaches) {
+    }
+
+    @Override
+    public void setErrorResult(BeachError error) {
+    }
+
 }

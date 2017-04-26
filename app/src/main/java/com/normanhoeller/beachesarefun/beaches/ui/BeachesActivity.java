@@ -7,6 +7,9 @@ import android.view.MenuItem;
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
+import com.normanhoeller.beachesarefun.beaches.Beach;
+
+import java.util.List;
 
 public class BeachesActivity extends BaseActivity {
 
@@ -47,6 +50,14 @@ public class BeachesActivity extends BaseActivity {
     private void logout() {
         if (fragment != null) {
             fragment.logoutCurrentUser();
+        }
+    }
+
+    @Override
+    public void setBeachesResult(List<Beach> beaches) {
+        BeachListFragment beachListFragment = (BeachListFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
+        if (beachListFragment != null) {
+            beachListFragment.setBeaches(beaches);
         }
     }
 }

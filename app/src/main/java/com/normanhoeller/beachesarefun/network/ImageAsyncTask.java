@@ -4,9 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
 
-import com.normanhoeller.beachesarefun.beaches.BeachModel;
+import com.normanhoeller.beachesarefun.beaches.Beach;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -45,10 +46,13 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+        if (isCancelled()) {
+            return;
+        }
         if (imageViewReference != null) {
             ImageView imageView = imageViewReference.get();
             if (imageView != null) {
-                ImageAsyncTask taskPotentiallyInUse = BeachModel.getTaskForImageView(imageView);
+                ImageAsyncTask taskPotentiallyInUse = Beach.getTaskForImageView(imageView);
                 if (this == taskPotentiallyInUse) {
                     imageView.setImageBitmap(bitmap);
                 }

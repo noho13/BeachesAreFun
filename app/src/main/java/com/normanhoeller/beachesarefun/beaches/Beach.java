@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference;
  * Created by norman on 22/04/17.
  */
 
-public class BeachModel {
+public class Beach {
 
     private String id;
     private String name;
@@ -27,7 +27,7 @@ public class BeachModel {
     private String width;
     private String height;
 
-    public BeachModel(String id, String name, String url, String width, String height) {
+    public Beach(String id, String name, String url, String width, String height) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -37,7 +37,7 @@ public class BeachModel {
 
     @BindingAdapter("android:layout_width")
     public static void setLayoutWidth(View view, int spanWidth) {
-        Log.d("BeachModel", "setting width to: " + spanWidth);
+        Log.d("Beach", "setting width to: " + spanWidth);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.width = spanWidth;
         view.setLayoutParams(layoutParams);
@@ -54,8 +54,8 @@ public class BeachModel {
     public static void setImageBitmap(ImageView imageView, String imageUrl, LruCache<String, Bitmap> memCache) {
         if (noOnGoingDownloadWork(imageView, imageUrl)) {
             ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache);
-            DrawableWrapper drawableWrapper = new DrawableWrapper(new WeakReference<>(imageAsyncTask));
-            imageView.setImageDrawable(drawableWrapper);
+            DownloadDrawable downloadDrawable = new DownloadDrawable(new WeakReference<>(imageAsyncTask));
+            imageView.setImageDrawable(downloadDrawable);
             imageAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);
         }
     }
@@ -74,8 +74,8 @@ public class BeachModel {
 
     public static ImageAsyncTask getTaskForImageView(ImageView imageView) {
         Drawable drawable = imageView.getDrawable();
-        if (drawable != null && drawable instanceof DrawableWrapper) {
-            return ((DrawableWrapper) drawable).getBitmapDownloaderTaskReference();
+        if (drawable != null && drawable instanceof DownloadDrawable) {
+            return ((DownloadDrawable) drawable).getBitmapDownloaderTaskReference();
         }
         return null;
     }

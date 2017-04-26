@@ -12,10 +12,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.normanhoeller.beachesarefun.BeachError;
+import com.normanhoeller.beachesarefun.Callback;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
-import com.normanhoeller.beachesarefun.beaches.BeachModel;
-import com.normanhoeller.beachesarefun.beaches.ui.BeachListFragment;
+import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.beaches.ui.BeachesActivity;
 import com.normanhoeller.beachesarefun.login.LoginActivity;
 import com.normanhoeller.beachesarefun.login.User;
@@ -31,9 +31,19 @@ import java.util.List;
 
 public class RetainedFragment extends Fragment {
 
-    public static final String FRAG_TAG = "network_fragment";
+    public static final String FRAG_TAG = "retained_fragment";
     private final static String TAG = RetainedFragment.class.getSimpleName();
+    private Callback callback;
     private LruCache<String, Bitmap> memCache;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Callback) {
+            callback = (Callback) context;
+        }
+
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +54,12 @@ public class RetainedFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     public LruCache<String, Bitmap> getMemCache() {
@@ -67,15 +83,16 @@ public class RetainedFragment extends Fragment {
         new ListAsyncTask(this).execute(String.valueOf(url));
     }
 
-    public void setResult(List<BeachModel> beaches) {
-        BeachListFragment beachListFragment = (BeachListFragment) getFragmentManager().findFragmentById(android.R.id.content);
-        if (beachListFragment != null) {
-            beachListFragment.setBeaches(beaches);
+    public void setResult(List<Beach> beaches) {
+        if (callback != null) {
+            callback.setBeachesResult(beaches);
         }
     }
 
     public void handleError(BeachError error) {
-        ((LoginActivity) getActivity()).showSnackBar(null, error.getErrorText());
+        if (callback != null) {
+            callback.setErrorResult(error);
+        }
     }
 
     public void postPayload(String url, String payload) {

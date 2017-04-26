@@ -3,7 +3,6 @@ package com.normanhoeller.beachesarefun.beaches.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +16,7 @@ import android.widget.ProgressBar;
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
-import com.normanhoeller.beachesarefun.beaches.BeachModel;
+import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
@@ -95,7 +94,7 @@ public class BeachListFragment extends Fragment {
         });
     }
 
-    public void setBeaches(List<BeachModel> beaches) {
+    public void setBeaches(List<Beach> beaches) {
         Log.d(TAG, "got beaches: " + beaches.size());
         loading = false;
         if (progressBar.getVisibility() == View.VISIBLE) {
@@ -103,7 +102,7 @@ public class BeachListFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         }
         if (beaches.size() > 0) {
-            adapter.setBeachModelList(beaches);
+            adapter.setBeachList(beaches);
         } else {
             lastPageLoaded = true;
         }

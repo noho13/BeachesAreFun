@@ -2,7 +2,7 @@ package com.normanhoeller.beachesarefun.network;
 
 import android.os.AsyncTask;
 
-import com.normanhoeller.beachesarefun.beaches.BeachModel;
+import com.normanhoeller.beachesarefun.beaches.Beach;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by norman on 22/04/17.
  */
 
-public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
+public class ListAsyncTask extends AsyncTask<String, Void, List<Beach>> {
 
     private final static String TAG = ListAsyncTask.class.getSimpleName();
     private RetainedFragment fragment;
@@ -32,14 +32,14 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
     }
 
     @Override
-    protected List<BeachModel> doInBackground(String... strings) {
+    protected List<Beach> doInBackground(String... strings) {
         String urlAsString = strings[0];
         String json = loadPageOfPictures(urlAsString);
         return parseJson(json);
     }
 
     @Override
-    protected void onPostExecute(List<BeachModel> beaches) {
+    protected void onPostExecute(List<Beach> beaches) {
         fragment.setResult(beaches);
     }
 
@@ -71,8 +71,8 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
         return result;
     }
 
-    private List<BeachModel> parseJson(String json) {
-        List<BeachModel> beaches = new ArrayList<>();
+    private List<Beach> parseJson(String json) {
+        List<Beach> beaches = new ArrayList<>();
         try {
             JSONArray jArray = new JSONArray(json);
             for (int i = 0; i < jArray.length(); i++) {
@@ -82,7 +82,7 @@ public class ListAsyncTask extends AsyncTask<String, Void, List<BeachModel>> {
                 String url = beach.getString("url");
                 String width = beach.getString("width");
                 String height = beach.getString("height");
-                beaches.add(new BeachModel(id, name, url, width, height));
+                beaches.add(new Beach(id, name, url, width, height));
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -8,10 +8,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.normanhoeller.beachesarefun.R;
-import com.normanhoeller.beachesarefun.beaches.BeachModel;
+import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.beaches.CacheWrapper;
 import com.normanhoeller.beachesarefun.databinding.ItemBeachBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,20 +21,18 @@ import java.util.List;
 
 public class BeachAdapter extends RecyclerView.Adapter<BeachAdapter.ViewHolder> {
 
-    private List<BeachModel> beachModelList;
+    private List<Beach> beachList = new ArrayList<>();
     private CacheWrapper cacheWrapper;
 
     public BeachAdapter(LruCache<String, Bitmap> memCache, int spanWidth) {
         this.cacheWrapper = new CacheWrapper(memCache, spanWidth);
     }
 
-    public void setBeachModelList(List<BeachModel> beaches) {
-        if (beachModelList != null) {
-            beachModelList.addAll(beaches);
-        } else {
-            beachModelList = beaches;
-        }
-        notifyDataSetChanged();
+    public void setBeachList(List<Beach> beaches) {
+        int insertedAt = beachList.size();
+        beachList.addAll(beaches);
+
+        notifyItemInserted(insertedAt);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class BeachAdapter extends RecyclerView.Adapter<BeachAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        BeachModel item = beachModelList.get(position);
+        Beach item = beachList.get(position);
         holder.itemBeachBinding.setBeach(item);
         holder.itemBeachBinding.setCacheWrapper(cacheWrapper);
         holder.itemBeachBinding.executePendingBindings();
@@ -52,8 +51,8 @@ public class BeachAdapter extends RecyclerView.Adapter<BeachAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (beachModelList != null) {
-            return beachModelList.size();
+        if (beachList != null) {
+            return beachList.size();
         }
         return 0;
     }

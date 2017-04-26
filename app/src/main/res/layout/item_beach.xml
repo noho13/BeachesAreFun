@@ -6,7 +6,7 @@
 
         <variable
             name="beach"
-            type="com.normanhoeller.beachesarefun.beaches.BeachModel" />
+            type="com.normanhoeller.beachesarefun.beaches.Beach" />
 
         <variable
             name="cacheWrapper"
