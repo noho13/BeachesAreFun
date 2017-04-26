@@ -2,7 +2,6 @@ package com.normanhoeller.beachesarefun.login;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.BeachError;
@@ -25,12 +24,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void showSnackBar(View view, String text) {
-        super.showSnackBar(findViewById(R.id.fl_container), text);
-    }
-
-    @Override
     public void setErrorResult(BeachError error) {
-        showSnackBar(null, error.getErrorText());
+        showSnackBar(findViewById(R.id.fl_container), error.getErrorText());
     }
 }
