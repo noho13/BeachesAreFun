@@ -38,7 +38,6 @@ public class Beach {
 
     @BindingAdapter("android:layout_width")
     public static void setLayoutWidth(View view, int spanWidth) {
-        Log.d("Beach", "setting width to: " + spanWidth);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.width = spanWidth;
         view.setLayoutParams(layoutParams);
