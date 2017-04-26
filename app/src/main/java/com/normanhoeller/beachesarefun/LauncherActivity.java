@@ -21,6 +21,7 @@ public class LauncherActivity extends Activity {
         Intent startNextActivity;
         if (!TextUtils.isEmpty(Utils.retrieveToken(this))) {
             startNextActivity = new Intent(this, BeachesActivity.class);
+            startNextActivity.putExtra(Utils.START_LOADING, true);
         } else {
             startNextActivity = new Intent(this, LoginActivity.class);
         }

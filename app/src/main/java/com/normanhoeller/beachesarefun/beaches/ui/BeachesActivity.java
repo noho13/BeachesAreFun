@@ -20,7 +20,8 @@ public class BeachesActivity extends BaseActivity {
             BeachListFragment fragment = BeachListFragment.createInstance();
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
         }
-        if (Utils.isNetworkAvailable(this)) {
+        // Flag to prevent loading for tests...alternatively one could Inject a Dependency that gets mocked in test
+        if (Utils.isNetworkAvailable(this) && getIntent().getBooleanExtra(Utils.START_LOADING, false)) {
             fragment.loadPageOfPictures(1);
         } else {
             showSnackBar(findViewById(android.R.id.content), getString(R.string.no_internet));

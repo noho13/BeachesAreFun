@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -21,8 +23,10 @@ public class Utils {
     public static final int PAGE_SIZE = 6;
     private static final String TOKEN = "token";
     private static final String BASE_URL = "139.59.158.8:3000";
+    public static final String START_LOADING = "start_loading";
 
-    public static String getStringURL(String path, String queryParamValue) {
+    public static String getStringURL(@NonNull String path, @Nullable String queryParamValue) {
+
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder
                 .scheme("http")

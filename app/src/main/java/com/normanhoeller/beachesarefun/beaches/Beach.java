@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,9 @@ public class Beach {
 
     @BindingAdapter(value = {"imageUrl", "memCache"}, requireAll = false)
     public static void setImageBitmap(ImageView imageView, String imageUrl, LruCache<String, Bitmap> memCache) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return;
+        }
         if (noOnGoingDownloadWork(imageView, imageUrl)) {
             ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache);
             DownloadDrawable downloadDrawable = new DownloadDrawable(new WeakReference<>(imageAsyncTask));
@@ -89,7 +93,7 @@ public class Beach {
     }
 
     public String imageUrl() {
-        return Utils.getStringURL(url, null);
+        return url != null ? Utils.getStringURL(url, null) : null;
     }
 
     public int getWidth() {

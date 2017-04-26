@@ -102,6 +102,7 @@ public class RetainedFragment extends Fragment {
         Utils.storeToken(getContext(), user.getToken());
         Intent startImages = new Intent(getActivity(), BeachesActivity.class);
         startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startImages.putExtra(Utils.START_LOADING, true);
         startActivity(startImages);
     }
 
