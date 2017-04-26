@@ -70,7 +70,7 @@ public class RetainedFragment extends Fragment {
 
     public void loadPageOfPictures(int page) {
         BeachRequest request = BeachRequest.createBeachRequest(Utils.BEACHES, page, "beaches");
-        new BeachAsyncTask(this).execute(request);
+        new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
     }
 
     public void setBeachResult(BeachResult result) {
@@ -98,7 +98,7 @@ public class RetainedFragment extends Fragment {
 
     public void postUserCredentials(BeachRequest request) {
         if (Utils.isNetworkAvailable(getContext())) {
-            new BeachAsyncTask(this).execute(request);
+            new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
         } else {
             handleError(new BeachError(getString(R.string.no_internet)));
         }
