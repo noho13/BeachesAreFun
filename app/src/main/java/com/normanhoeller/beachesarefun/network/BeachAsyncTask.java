@@ -45,7 +45,8 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
         switch (request.getOperationType()) {
             case Utils.REGISTER:
             case Utils.LOGIN:
-                setResult(postRequest(request.getPath(), request.getPayload()), result);
+                urlAsString = Utils.getStringURL(request.getPath(), null);
+                setResult(postRequest(urlAsString, request.getPayload()), result);
                 break;
             case Utils.BEACHES:
                 urlAsString = Utils.getStringURL(request.getPath(), String.valueOf(request.getPage()));
@@ -92,8 +93,7 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
     }
 
     @Override
-    public String postRequest(String path, String payload) {
-        String urlString = Utils.getStringURL(path, null);
+    public String postRequest(String urlString, String payload) {
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(urlString);
@@ -161,6 +161,7 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
             result.setUser(user);
         } catch (JSONException e) {
             e.printStackTrace();
+            // in a real world example we would give specific error information
             result.setBeachError(new BeachError("oops, an error occurred"));
         }
     }
