@@ -79,7 +79,6 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
             if (!TextUtils.isEmpty(token)) {
                 urlConnection.addRequestProperty("x-auth", token);
             }
-
             try {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 return readStream(in);

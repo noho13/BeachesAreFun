@@ -1,8 +1,10 @@
 package com.normanhoeller.beachesarefun.beaches.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.LruCache;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +18,9 @@ import com.normanhoeller.beachesarefun.BaseActivity;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.Beach;
+import com.normanhoeller.beachesarefun.beaches.CacheWrapper;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
+import com.normanhoeller.beachesarefun.network.DiscCache;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
 import java.util.Arrays;
@@ -62,7 +66,11 @@ public class BeachListFragment extends Fragment {
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        adapter = new BeachAdapter(activity.getRetainedFragment().getMemCache(), metrics.widthPixels / 2);
+        DiscCache discCache = activity.getRetainedFragment().getDiscCache();
+        LruCache<String, Bitmap> memCache = activity.getRetainedFragment().getMemCache();
+        CacheWrapper cacheWrapper = new CacheWrapper(discCache, memCache, metrics.widthPixels / 2);
+
+        adapter = new BeachAdapter(cacheWrapper);
         final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(adapter);
@@ -106,7 +114,7 @@ public class BeachListFragment extends Fragment {
 
     private void loadMoreItems(int page) {
         RetainedFragment fragment = (RetainedFragment) getFragmentManager().findFragmentByTag(RetainedFragment.FRAG_TAG);
-        if (fragment != null && Utils.isNetworkAvailable(fragment.getContext())) {
+        if (fragment != null /*&& Utils.isNetworkAvailable(fragment.getContext())*/) {
             ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.load_more));
             fragment.loadPageOfPictures(page);
         } else {

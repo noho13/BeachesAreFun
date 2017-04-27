@@ -6,12 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.normanhoeller.beachesarefun.Utils;
+import com.normanhoeller.beachesarefun.network.DiscCache;
 import com.normanhoeller.beachesarefun.network.ImageAsyncTask;
 
 import java.lang.ref.WeakReference;
@@ -50,13 +50,15 @@ public class Beach {
         view.setLayoutParams(layoutParams);
     }
 
-    @BindingAdapter(value = {"imageUrl", "memCache"}, requireAll = false)
-    public static void setImageBitmap(ImageView imageView, String imageUrl, LruCache<String, Bitmap> memCache) {
+    @BindingAdapter(value = {"imageUrl", "discCache", "memCache",}, requireAll = false)
+    public static void setImageBitmap(ImageView imageView, String imageUrl, DiscCache discCache,
+                                      LruCache<String, Bitmap> memCache) {
+
         if (TextUtils.isEmpty(imageUrl)) {
             return;
         }
         if (noOnGoingDownloadWork(imageView, imageUrl)) {
-            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache);
+            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache, discCache);
             DownloadDrawable downloadDrawable = new DownloadDrawable(new WeakReference<>(imageAsyncTask));
             imageView.setImageDrawable(downloadDrawable);
             imageAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);
