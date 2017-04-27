@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.normanhoeller.beachesarefun.BaseActivity;
-import com.normanhoeller.beachesarefun.BeachError;
 import com.normanhoeller.beachesarefun.R;
 
 /**
@@ -29,10 +28,11 @@ public class LoginActivity extends BaseActivity {
         LoginFragment fragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.fl_container);
         if (fragment != null) {
             if (user != null && TextUtils.isEmpty(user.getErrorMessage())) {
-                fragment.onLoginSuccess();
+                fragment.onSuccess();
             } else {
+                dismissSnackBar();
                 String errorMessage = user != null ? user.getErrorMessage() : getString(R.string.error);
-                showSnackBar(findViewById(R.id.fl_container), errorMessage);
+                showSnackBar(fragment.getView(), errorMessage);
             }
         }
     }

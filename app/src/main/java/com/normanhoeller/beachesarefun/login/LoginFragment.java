@@ -85,21 +85,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             try {
                 BeachRequest request;
                 String payLoad = getPayload();
-                String message;
                 if (view.getId() == R.id.btn_login) {
-                    message = getString(R.string.loggin_in);
+                    showUserFeedback(getString(R.string.loggin_in));
                     request = BeachRequest.createBeachRequest(Utils.LOGIN, "user/login", payLoad);
                     retainedFragment.postUserCredentials(request);
                 } else {
+                    showUserFeedback(getString(R.string.register_you));
                     request = BeachRequest.createBeachRequest(Utils.LOGIN, "user/register", payLoad);
                     retainedFragment.postUserCredentials(request);
-                    message = getString(R.string.register_you);
                 }
-                ((BaseActivity) getActivity()).showSnackBar(getView(), message);
+
             } catch (AuthenticatorException e) {
-                ((BaseActivity) getActivity()).showSnackBar(getView(), e.getMessage());
+                showUserFeedback(e.getMessage());
             }
         }
+    }
+
+    private void showUserFeedback(String message) {
+        ((BaseActivity) getActivity()).showSnackBar(getView(), message);
     }
 
     private boolean checkPassword(String password) {
@@ -116,11 +119,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public void onLoginSuccess() {
+    public void onSuccess() {
         Intent startImages = new Intent(getActivity(), BeachesActivity.class);
         startImages.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startImages.putExtra(Utils.START_LOADING, true);

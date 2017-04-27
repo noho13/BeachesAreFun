@@ -44,7 +44,7 @@ class BeachParser {
             return new User(id, email);
         } catch (JSONException exception) {
             exception.printStackTrace();
-            return new User("Unfortunately, an error has happened. Plese try again");
+            return new User("Unfortunately, an error has happened. Please try again");
         }
     }
 

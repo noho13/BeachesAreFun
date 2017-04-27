@@ -59,8 +59,6 @@ public class RetainedFragment extends Fragment {
             memCache = new LruCache<String, Bitmap>(cacheSize) {
                 @Override
                 protected int sizeOf(String key, Bitmap bitmap) {
-                    // The cache size will be measured in kilobytes rather than
-                    // number of items.
                     return bitmap.getByteCount() / 1024;
                 }
             };
@@ -71,6 +69,15 @@ public class RetainedFragment extends Fragment {
     public void loadPageOfPictures(int page) {
         BeachRequest request = BeachRequest.createBeachRequest(Utils.BEACHES, page, "beaches");
         new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
+    }
+
+    public void postUserCredentials(BeachRequest request) {
+        if (Utils.isNetworkAvailable(getContext())) {
+            new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
+        } else {
+            handleError(new BeachError(getString(R.string.no_internet)));
+        }
+
     }
 
     public void setBeachResult(BeachResult result) {
@@ -94,15 +101,6 @@ public class RetainedFragment extends Fragment {
         if (callback != null) {
             callback.setUserResult(new User(error.getErrorText()));
         }
-    }
-
-    public void postUserCredentials(BeachRequest request) {
-        if (Utils.isNetworkAvailable(getContext())) {
-            new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
-        } else {
-            handleError(new BeachError(getString(R.string.no_internet)));
-        }
-
     }
 
     public void logoutCurrentUser() {
