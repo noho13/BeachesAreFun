@@ -14,4 +14,6 @@ public interface Callback {
     void setBeachesResult(List<Beach> beaches);
 
     void setUserResult(User user);
+
+    void handleError(BeachError error);
 }

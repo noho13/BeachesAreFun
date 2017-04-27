@@ -36,16 +36,10 @@ class BeachParser {
     }
 
 
-    static User parseUser(String json) {
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            String id = jsonObject.getString("_id");
-            String email = jsonObject.getString("email");
-            return new User(id, email);
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-            return new User("Unfortunately, an error has happened. Please try again");
-        }
+    static User parseUser(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String id = jsonObject.getString("_id");
+        String email = jsonObject.getString("email");
+        return new User(id, email);
     }
-
 }

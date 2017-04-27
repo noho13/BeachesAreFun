@@ -110,7 +110,7 @@ public class BeachListFragment extends Fragment {
             ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.load_more));
             fragment.loadPageOfPictures(page);
         } else {
-            ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.no_internet));
+            ((BaseActivity) getActivity()).showSnackBar(getView(), getString(R.string.no_connection));
         }
     }
 }

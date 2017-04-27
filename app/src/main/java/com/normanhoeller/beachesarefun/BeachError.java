@@ -12,7 +12,7 @@ public class BeachError {
         this.errorText = errorText;
     }
 
-    public String getErrorText() {
+    public String getErrorMessage() {
         return errorText;
     }
 }

@@ -10,11 +10,19 @@ public class BeachRequest {
     private String payload;
     private int page;
     private String path;
+    private String token;
 
     static BeachRequest createBeachRequest(int operationType, int page, String path) {
         BeachRequest beachRequest = new BeachRequest(operationType);
         beachRequest.setPage(page);
         beachRequest.setPath(path);
+        return beachRequest;
+    }
+
+    public static BeachRequest createBeachRequest(String path, int operationType, String token) {
+        BeachRequest beachRequest = new BeachRequest(operationType);
+        beachRequest.setPath(path);
+        beachRequest.setToken(token);
         return beachRequest;
     }
 
@@ -25,7 +33,7 @@ public class BeachRequest {
         return beachRequest;
     }
 
-    private BeachRequest(int operationType) {
+    public BeachRequest(int operationType) {
         this.operationType = operationType;
     }
 
@@ -55,5 +63,13 @@ public class BeachRequest {
 
     private void setPath(String path) {
         this.path = path;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

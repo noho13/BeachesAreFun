@@ -1,10 +1,14 @@
 package com.normanhoeller.beachesarefun.network;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
+import com.normanhoeller.beachesarefun.BeachError;
 import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.login.User;
+
+import org.json.JSONException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -37,15 +41,20 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
     protected BeachResult doInBackground(BeachRequest... params) {
         BeachRequest request = params[0];
         BeachResult result = new BeachResult(request.getOperationType());
+        String urlAsString;
         switch (request.getOperationType()) {
             case Utils.REGISTER:
             case Utils.LOGIN:
-                User user = BeachParser.parseUser(postCredentials(request.getPath(), request.getPayload()));
-                result.setUser(user);
+                setResult(postRequest(request.getPath(), request.getPayload()), result);
                 break;
             case Utils.BEACHES:
-                List<Beach> beaches = BeachParser.parseBeaches(getBeaches(request.getPath(), request.getPage()));
+                urlAsString = Utils.getStringURL(request.getPath(), String.valueOf(request.getPage()));
+                List<Beach> beaches = BeachParser.parseBeaches(getRequest(urlAsString, null));
                 result.setBeachList(beaches);
+                break;
+            case Utils.USER_INFO:
+                urlAsString = Utils.getStringURL(request.getPath(), null);
+                setResult(getRequest(urlAsString, request.getToken()), result);
                 break;
             default:
                 throw new IllegalArgumentException("this operation is not supported");
@@ -59,14 +68,17 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
     }
 
     @Override
-    public String getBeaches(String path, int page) {
-        String urlAsString = Utils.getStringURL(path, String.valueOf(page));
+    public String getRequest(String urlAsString, String token) {
         try {
             URL url = new URL(urlAsString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
             urlConnection.addRequestProperty("Cache-Control", "max-stale=" + maxStale);
             urlConnection.setUseCaches(true);
+            if (!TextUtils.isEmpty(token)) {
+                urlConnection.addRequestProperty("x-auth", token);
+            }
+
             try {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 return readStream(in);
@@ -80,7 +92,7 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
     }
 
     @Override
-    public String postCredentials(String path, String payload) {
+    public String postRequest(String path, String payload) {
         String urlString = Utils.getStringURL(path, null);
         HttpURLConnection urlConnection = null;
         try {
@@ -141,6 +153,16 @@ public class BeachAsyncTask extends AsyncTask<BeachRequest, Void, BeachResult> i
             e.printStackTrace();
         }
 
+    }
+
+    private void setResult(String resultString, BeachResult result) {
+        try {
+            User user = BeachParser.parseUser(resultString);
+            result.setUser(user);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            result.setBeachError(new BeachError("oops, an error occurred"));
+        }
     }
 
 }

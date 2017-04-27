@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.normanhoeller.beachesarefun.beaches.Beach;
@@ -65,10 +66,7 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
         try {
             URL url = new URL(urlAsString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
-            urlConnection.addRequestProperty("Cache-Control", "max-stale=" + maxStale);
-            urlConnection.setUseCaches(true);
-
+            // no http caching since resource not cachable - bummer: max-age=0
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             return BitmapFactory.decodeStream(in);
         } catch (IOException e) {

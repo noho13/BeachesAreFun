@@ -69,4 +69,11 @@ public class BaseActivity extends AppCompatActivity implements Callback {
     @Override
     public void setUserResult(User user) {
     }
+
+    @Override
+    public void handleError(BeachError error) {
+        dismissSnackBar();
+        String errorMessage = error != null ? error.getErrorMessage() : getString(R.string.error);
+        showSnackBar(findViewById(android.R.id.content), errorMessage);
+    }
 }

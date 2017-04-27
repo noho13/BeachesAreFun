@@ -15,7 +15,6 @@ import com.normanhoeller.beachesarefun.Callback;
 import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.login.LoginActivity;
-import com.normanhoeller.beachesarefun.login.User;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -66,6 +65,17 @@ public class RetainedFragment extends Fragment {
         return memCache;
     }
 
+    public void loadUserInfo() {
+        Context context = getContext();
+        if (context != null && Utils.isNetworkAvailable(context)) {
+            String token = Utils.retrieveToken(context);
+            BeachRequest request = BeachRequest.createBeachRequest("user/me", Utils.USER_INFO, token);
+            new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
+        } else {
+            handleError(new BeachError(getString(R.string.no_connection)));
+        }
+    }
+
     public void loadPageOfPictures(int page) {
         BeachRequest request = BeachRequest.createBeachRequest(Utils.BEACHES, page, "beaches");
         new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
@@ -75,7 +85,7 @@ public class RetainedFragment extends Fragment {
         if (Utils.isNetworkAvailable(getContext())) {
             new BeachAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, request);
         } else {
-            handleError(new BeachError(getString(R.string.no_internet)));
+            handleError(new BeachError(getString(R.string.no_connection)));
         }
 
     }
@@ -87,7 +97,12 @@ public class RetainedFragment extends Fragment {
         switch (result.getResultType()) {
             case Utils.LOGIN:
             case Utils.REGISTER:
-                callback.setUserResult(result.getUser());
+            case Utils.USER_INFO:
+                if (result.getBeachError() != null) {
+                    callback.handleError(result.getBeachError());
+                } else {
+                    callback.setUserResult(result.getUser());
+                }
                 break;
             case Utils.BEACHES:
                 callback.setBeachesResult(result.getBeachList());
@@ -99,13 +114,13 @@ public class RetainedFragment extends Fragment {
 
     public void handleError(BeachError error) {
         if (callback != null) {
-            callback.setUserResult(new User(error.getErrorText()));
+            callback.handleError(error);
         }
     }
 
     public void logoutCurrentUser() {
         if (!Utils.isNetworkAvailable(getContext())) {
-            handleError(new BeachError(getString(R.string.no_internet)));
+            handleError(new BeachError(getString(R.string.no_connection)));
             return;
         }
 

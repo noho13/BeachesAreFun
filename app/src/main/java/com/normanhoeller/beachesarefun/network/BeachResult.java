@@ -1,5 +1,6 @@
 package com.normanhoeller.beachesarefun.network;
 
+import com.normanhoeller.beachesarefun.BeachError;
 import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.login.User;
 
@@ -14,10 +15,12 @@ class BeachResult {
     private List<Beach> beachList;
     private User user;
     private int resultType;
+    private BeachError beachError;
 
     public BeachResult(int resultType) {
         this.resultType = resultType;
     }
+
 
     List<Beach> getBeachList() {
         return beachList;
@@ -37,5 +40,13 @@ class BeachResult {
 
     public int getResultType() {
         return resultType;
+    }
+
+    void setBeachError(BeachError error) {
+        this.beachError = error;
+    }
+
+    public BeachError getBeachError() {
+        return beachError;
     }
 }

@@ -6,7 +6,7 @@ package com.normanhoeller.beachesarefun.network;
 
 public interface BeachAPI {
 
-    String getBeaches(String path, int page);
-    String postCredentials(String path, String payload);
+    String getRequest(String urlAsString, String token);
+    String postRequest(String path, String payload);
 
 }
