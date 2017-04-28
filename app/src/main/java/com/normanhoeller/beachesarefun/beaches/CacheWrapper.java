@@ -29,10 +29,6 @@ public class CacheWrapper {
         return bitmapStore;
     }
 
-    public String getSpanWidthAsString() {
-        return String.valueOf(spanWidth);
-    }
-
     public int getSpanWidth() {
         return spanWidth;
     }

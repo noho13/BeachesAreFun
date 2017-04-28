@@ -62,14 +62,7 @@ public class BeachListFragment extends Fragment {
             toolbar.setTitle(getString(R.string.app_name));
             activity.setSupportActionBar(toolbar);
         }
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        BitmapStore bitmapStore = activity.getRetainedFragment().getBitmapStore();
-        LruCache<String, Bitmap> memCache = activity.getRetainedFragment().getMemCache();
-        CacheWrapper cacheWrapper = new CacheWrapper(bitmapStore, memCache, metrics.widthPixels / 2);
-
+        CacheWrapper cacheWrapper = setUpCaches(activity);
         adapter = new BeachAdapter(cacheWrapper);
         final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -95,6 +88,15 @@ public class BeachListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private CacheWrapper setUpCaches(BaseActivity activity) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        BitmapStore bitmapStore = activity.getRetainedFragment().getBitmapStore();
+        LruCache<String, Bitmap> memCache = activity.getRetainedFragment().getMemCache();
+        return new CacheWrapper(bitmapStore, memCache, metrics.widthPixels / 2);
     }
 
     public void setBeaches(List<Beach> beaches) {
