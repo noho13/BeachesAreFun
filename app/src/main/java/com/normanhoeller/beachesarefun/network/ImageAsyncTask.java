@@ -51,6 +51,9 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
         bitmap = downloadImageData(urlAsString);
         if (bitmap != null) {
             addBitmapToMemCache(urlAsString, bitmap);
+            // here we insert into database to save on bandwidth
+            // maybe we should not since 'max-age = 0' is being delivered by server
+            // also this kind of slows down delivery of downloaded image - questionable
             insertBitmapIntoStore(urlAsString, bitmap);
         }
         return bitmap;
