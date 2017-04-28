@@ -3,7 +3,7 @@ package com.normanhoeller.beachesarefun.beaches;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
-import com.normanhoeller.beachesarefun.network.DiscCache;
+import com.normanhoeller.beachesarefun.network.BitmapStore;
 
 /**
  * Created by normanMedicuja on 24/04/17.
@@ -11,12 +11,12 @@ import com.normanhoeller.beachesarefun.network.DiscCache;
 
 public class CacheWrapper {
 
-    private DiscCache discCache;
+    private BitmapStore bitmapStore;
     private LruCache<String, Bitmap> memCache;
     private int spanWidth;
 
-    public CacheWrapper(DiscCache discCache, LruCache<String, Bitmap> memCache, int spanWidth) {
-        this.discCache = discCache;
+    public CacheWrapper(BitmapStore bitmapStore, LruCache<String, Bitmap> memCache, int spanWidth) {
+        this.bitmapStore = bitmapStore;
         this.memCache = memCache;
         this.spanWidth = spanWidth;
     }
@@ -25,8 +25,8 @@ public class CacheWrapper {
         return memCache;
     }
 
-    public DiscCache getDiscCache() {
-        return discCache;
+    public BitmapStore getBitmapStore() {
+        return bitmapStore;
     }
 
     public String getSpanWidthAsString() {

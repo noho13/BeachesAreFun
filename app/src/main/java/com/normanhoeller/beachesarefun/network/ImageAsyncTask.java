@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.normanhoeller.beachesarefun.beaches.Beach;
@@ -26,13 +25,13 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
     private String url;
     private LruCache<String, Bitmap> memoryCache;
-    private DiscCache discCache;
+    private BitmapStore bitmapStore;
 
-    public ImageAsyncTask(ImageView imageView, String url, LruCache<String, Bitmap> memCache, DiscCache discCache) {
+    public ImageAsyncTask(ImageView imageView, String url, LruCache<String, Bitmap> memCache, BitmapStore bitmapStore) {
         this.imageViewReference = new WeakReference<>(imageView);
         this.url = url;
         this.memoryCache = memCache;
-        this.discCache = discCache;
+        this.bitmapStore = bitmapStore;
     }
 
     @Override
@@ -41,21 +40,18 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
         Bitmap bitmap = memoryCache.get(urlAsString);
         if (bitmap != null) {
-            Log.d(TAG, "image from memCache");
             return bitmap;
         }
-        bitmap = discCache.get(urlAsString);
+        bitmap = bitmapStore.get(urlAsString);
         if (bitmap != null) {
-            Log.d(TAG, "image from discCache");
-            addBitmapToCache(urlAsString, bitmap);
+            addBitmapToMemCache(urlAsString, bitmap);
             return bitmap;
         }
 
-        Log.d(TAG, "image from network");
         bitmap = downloadImageData(urlAsString);
         if (bitmap != null) {
-            Log.d(TAG, "add image to cache");
-            addBitmapToCache(urlAsString, bitmap);
+            addBitmapToMemCache(urlAsString, bitmap);
+            insertBitmapIntoStore(urlAsString, bitmap);
         }
         return bitmap;
     }
@@ -93,17 +89,19 @@ public class ImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
         return url;
     }
 
-    public void addBitmapToCache(String key, Bitmap bitmap) {
+    private void addBitmapToMemCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
             memoryCache.put(key, bitmap);
         }
+    }
 
-        if (!discCache.isBitmapInCache(key)) {
-            discCache.put(key, bitmap);
+    private void insertBitmapIntoStore(String key, Bitmap bitmap) {
+        if (!bitmapStore.isBitmapInStore(key)) {
+            bitmapStore.put(key, bitmap);
         }
     }
 
-    public Bitmap getBitmapFromMemCache(String key) {
+    private Bitmap getBitmapFromMemCache(String key) {
         return memoryCache.get(key);
     }
 }

@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="@{beach.height, default=wrap_content}"
             app:imageUrl="@{beach.imageUrl}"
-            app:discCache="@{cacheWrapper.getDiscCache}"
+            app:bitmapStore="@{cacheWrapper.getBitmapStore}"
             app:memCache="@{cacheWrapper.getMemCache}"
             android:scaleType="fitXY"
             android:padding="1dp"

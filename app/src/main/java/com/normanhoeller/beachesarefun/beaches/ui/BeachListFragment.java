@@ -20,7 +20,7 @@ import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.beaches.CacheWrapper;
 import com.normanhoeller.beachesarefun.beaches.adapter.BeachAdapter;
-import com.normanhoeller.beachesarefun.network.DiscCache;
+import com.normanhoeller.beachesarefun.network.BitmapStore;
 import com.normanhoeller.beachesarefun.network.RetainedFragment;
 
 import java.util.Arrays;
@@ -66,9 +66,9 @@ public class BeachListFragment extends Fragment {
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        DiscCache discCache = activity.getRetainedFragment().getDiscCache();
+        BitmapStore bitmapStore = activity.getRetainedFragment().getBitmapStore();
         LruCache<String, Bitmap> memCache = activity.getRetainedFragment().getMemCache();
-        CacheWrapper cacheWrapper = new CacheWrapper(discCache, memCache, metrics.widthPixels / 2);
+        CacheWrapper cacheWrapper = new CacheWrapper(bitmapStore, memCache, metrics.widthPixels / 2);
 
         adapter = new BeachAdapter(cacheWrapper);
         final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -85,7 +85,7 @@ public class BeachListFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 int totalItemCount = staggeredGridLayoutManager.getItemCount();
-                int[] lastVisibleItemPosition = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null);
+                int[] lastVisibleItemPosition = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
 
                 Arrays.sort(lastVisibleItemPosition);
                 int currentPage = totalItemCount / Utils.PAGE_SIZE;

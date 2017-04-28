@@ -30,7 +30,7 @@ public class RetainedFragment extends Fragment {
     private final static String TAG = RetainedFragment.class.getSimpleName();
     private Callback callback;
     private LruCache<String, Bitmap> memCache;
-    private DiscCache discCache;
+    private BitmapStore bitmapStore;
 
     @Override
     public void onAttach(Context context) {
@@ -50,9 +50,15 @@ public class RetainedFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         callback = null;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         // close Database
-        if (discCache != null) {
-            discCache.close();
+        if (bitmapStore != null) {
+            bitmapStore.close();
         }
     }
 
@@ -70,11 +76,11 @@ public class RetainedFragment extends Fragment {
         return memCache;
     }
 
-    public DiscCache getDiscCache() {
-        if (discCache == null) {
-            discCache = new DiscCache(getContext().getApplicationContext());
+    public BitmapStore getBitmapStore() {
+        if (bitmapStore == null) {
+            bitmapStore = new BitmapStore(getContext().getApplicationContext());
         }
-        return discCache;
+        return bitmapStore;
     }
 
     public void loadUserInfo() {

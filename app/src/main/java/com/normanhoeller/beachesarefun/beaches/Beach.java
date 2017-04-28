@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.normanhoeller.beachesarefun.Utils;
-import com.normanhoeller.beachesarefun.network.DiscCache;
+import com.normanhoeller.beachesarefun.network.BitmapStore;
 import com.normanhoeller.beachesarefun.network.ImageAsyncTask;
 
 import java.lang.ref.WeakReference;
@@ -50,15 +50,15 @@ public class Beach {
         view.setLayoutParams(layoutParams);
     }
 
-    @BindingAdapter(value = {"imageUrl", "discCache", "memCache",}, requireAll = false)
-    public static void setImageBitmap(ImageView imageView, String imageUrl, DiscCache discCache,
+    @BindingAdapter(value = {"imageUrl", "bitmapStore", "memCache",}, requireAll = false)
+    public static void setImageBitmap(ImageView imageView, String imageUrl, BitmapStore bitmapStore,
                                       LruCache<String, Bitmap> memCache) {
 
         if (TextUtils.isEmpty(imageUrl)) {
             return;
         }
         if (noOnGoingDownloadWork(imageView, imageUrl)) {
-            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache, discCache);
+            ImageAsyncTask imageAsyncTask = new ImageAsyncTask(imageView, imageUrl, memCache, bitmapStore);
             DownloadDrawable downloadDrawable = new DownloadDrawable(new WeakReference<>(imageAsyncTask));
             imageView.setImageDrawable(downloadDrawable);
             imageAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imageUrl);

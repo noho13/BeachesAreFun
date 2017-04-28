@@ -14,26 +14,25 @@ import com.normanhoeller.beachesarefun.Utils;
  * Created by normanMedicuja on 27/04/17.
  */
 
-public class DiscCache extends SQLiteOpenHelper {
+public class BitmapStore extends SQLiteOpenHelper {
 
-    private static final String TAG = DiscCache.class.getSimpleName();
+    private static final String TAG = BitmapStore.class.getSimpleName();
 
     public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "BeachCache.db";
+    public static final String DATABASE_NAME = "BitmapStore.db";
     private static final String TABLE_NAME = "bitmaps";
     private static final String COL_KEY = "key";
     private static final String COL_BITMAP = "bitmap";
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + TABLE_NAME + " (" + COL_KEY + " TEXT,"
                                                                                             + COL_BITMAP + " BLOB)";
-    private static final String SQL_DELETE_ENTRIES = "DELETE FROM " + TABLE_NAME + " WHERE 1";
+    private static final String SQL_DELETE_ENTRIES = "DELETE * FROM " + TABLE_NAME;
 
-    public DiscCache(Context context) {
+    public BitmapStore(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d(TAG, "Bitmap cache created");
         db.execSQL(SQL_CREATE_ENTRIES);
     }
 
@@ -63,7 +62,7 @@ public class DiscCache extends SQLiteOpenHelper {
         return bitmap;
     }
 
-    public boolean isBitmapInCache(String key) {
+    public boolean isBitmapInStore(String key) {
         Cursor cursor = getKeyCursor(key);
         return (cursor.moveToFirst() && cursor.getCount() != 0);
     }

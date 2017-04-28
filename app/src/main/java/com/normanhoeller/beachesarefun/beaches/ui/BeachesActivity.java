@@ -13,6 +13,7 @@ import com.normanhoeller.beachesarefun.R;
 import com.normanhoeller.beachesarefun.Utils;
 import com.normanhoeller.beachesarefun.beaches.Beach;
 import com.normanhoeller.beachesarefun.login.User;
+import com.normanhoeller.beachesarefun.network.BitmapStore;
 
 import java.util.List;
 
@@ -62,7 +63,10 @@ public class BeachesActivity extends BaseActivity {
     private void logout() {
         if (fragment != null) {
             fragment.logoutCurrentUser();
+            fragment.getContext().deleteDatabase(BitmapStore.DATABASE_NAME);
         }
+
+
     }
 
     private void loadUserInfo() {
